@@ -1,0 +1,51 @@
+.tabs {
+    margin: 20px auto;
+    max-width: 1200px;
+    text-align: center;
+}
+
+.tab-buttons {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px solid #000000; /* 탭과 콘텐츠 구분선 */
+    background-color: #ffffff;
+}
+
+.tab-button {
+    flex: 1;
+    text-align: center;
+    padding: 20px 0;
+    cursor: pointer;
+    border: 1px solid #000000; /* 탭 개별 테두리 */
+    border-bottom: none; /* 아래쪽 테두리 제거 */
+    background: #ffffff;
+    font-size: 16px;
+    transition: all 0.3s;
+    border-radius: 10px 10px 0 0; /* 윗부분만 둥글게 */
+    margin-right: -1px; /* 테두리 중첩 방지 */
+}
+
+.tab-button:last-child {
+    margin-right: 0; /* 마지막 탭은 마진 제거 */
+}
+
+.tab-button.active {
+    font-weight: bold;
+    text-decoration: underline; /* 밑줄 */
+    color: #000000;
+    background-color: #f3f3f3; /* 활성화된 탭 배경색 */
+
+}
+
+.tab-button:not(.active):hover {
+    background-color: #f9f9f9; /* 비활성 탭 hover 효과 */
+}
+
+.tab-content {
+    padding: 20px;
+    background-color: #f3f3f3;
+    border: 1px solid #6a6a6a; /* 콘텐츠 박스 테두리 */
+    border-radius: 0 0 10px 10px; /* 아래 모서리 둥글게 */
+    border-top: none; /* 탭과의 테두리 중복 제거 */
+    text-align: left;
+}

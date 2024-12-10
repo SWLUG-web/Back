@@ -1,0 +1,42 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: transparent;
+  /* 배경색 투명 */
+  border-bottom: none;
+  /* 구분선 제거 */
+  box-shadow: none;
+  /* 혹시 있을 수도 있는 그림자 제거 */
+}
+
+
+.logo img {
+  width: 150px;
+}
+
+.navigation ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation ul li {
+  list-style: none;
+}
+
+.navigation a {
+  text-decoration: none;
+  color: #202123;
+  font-weight: bold;
+  font-size: 16px;
+  font-family: 'Pretendard-Regular';
+}
+
+.navigation a:hover {
+  color: #444CE0;
+}
+
