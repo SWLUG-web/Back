@@ -1,0 +1,38 @@
+.input-container {
+    width: 350px;
+}
+
+.form_title {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    margin-top: 20px;
+}
+
+.auth-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 5px 10px;
+    color: #202123;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.info-exp {
+    color: #444CE0;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+.password-reset-button {
+    width: 140px;
+    height: 35px;
+    margin-left: 20px;
+    border-radius: 10px;
+    background-color: #202123;
+    color: #F9F9F9;
+}

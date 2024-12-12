@@ -1,0 +1,39 @@
+.tag-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tag-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.tag-list {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.tag-button {
+    background-color: transparent;
+    border: 1px solid #444CE0;
+    color: #444CE0;
+    border-radius: 20px;
+    padding: 5px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.tag-button.active {
+    background-color: #444CE0;
+    color: white;
+    border-color: #444CE0;
+}
+
+.tag-button:hover {
+    background-color: #e7e7e7;
+}

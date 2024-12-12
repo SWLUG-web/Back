@@ -1,0 +1,88 @@
+{
+    "id": "2021111350",
+    "nickname": "25기_이송하",
+    "email": "songha1744@naver.com",
+    "phone": "010-1111-2222",
+    "page": 1,
+    "size": 5,
+    "totalPage": 3,
+    "totalCount": 1,
+    "board": [
+        {
+            "boardId": 1,
+            "title": "제목1",
+            "id": "2021111350",
+            "category": "2",
+            "contents": "게시글 내용",
+            "tag": "인턴"
+        },
+        {
+            "boardId": 2,
+            "title": "제목2",
+            "id": "2021111350",
+            "category": "2",
+            "contents": "게시글 내용",
+            "tag": [
+                "BoB",
+                "대외활동"
+            ]
+        },
+        {
+            "boardId": 3,
+            "title": "제목3",
+            "id": "2021111350",
+            "category": "3",
+            "contents": "게시글 내용",
+            "tag": "인턴"
+        },
+        {
+            "boardId": 4,
+            "title": "제목4",
+            "id": "2021111350",
+            "category": "1",
+            "contents": "게시글 내용",
+            "tag": [
+                "BoB",
+                "대외활동"
+            ]
+        },
+        {
+            "boardId": 5,
+            "title": "제목5",
+            "id": "2021111350",
+            "category": "1",
+            "contents": "게시글 내용",
+            "tag": "인턴"
+        },
+        {
+            "boardId": 6,
+            "title": "제목6",
+            "id": "2021111350",
+            "category": "1",
+            "contents": "게시글 내용",
+            "tag": [
+                "BoB",
+                "대외활동"
+            ]
+        },
+        {
+            "boardId": 7,
+            "title": "제목7",
+            "id": "2021111350",
+            "category": "1",
+            "contents": "게시글 내용",
+            "tag": "인턴"
+        },
+        {
+            "boardId": 8,
+            "title": "제목8",
+            "id": "2021111350",
+            "category": "1",
+            "contents": "게시글 내용",
+            "tag": [
+                "BoB",
+                "대외활동"
+            ]
+        }
+    ]
+}

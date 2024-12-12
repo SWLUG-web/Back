@@ -1,0 +1,78 @@
+/* Form 스타일 */
+.info-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+/* 입력 필드 컨테이너 스타일 */
+.info-form_field {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+}
+
+/* 라벨과 입력 필드를 감싸는 컨테이너 */
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* 라벨 스타일 */
+.info-form_field label {
+    width: 120px;
+    margin-right: 10px;
+    text-align: right;
+}
+
+/* 입력 필드 스타일 */
+.info-form_input {
+    width: 350px;
+    margin-left: 15px;
+    padding: 10px;
+    border: 1px solid #6a6a6a;
+    border-radius: 20px;
+    font-size: 16px;
+}
+
+/* 오류 메시지 스타일 */
+.info-form_error {
+    color: #E71818;
+    display: flex;
+    font-size: 16px;
+    margin-top: 5px;
+    margin-left: 150px;
+}
+
+.div.info-form_error {
+    margin-left: 20px;
+}
+
+.info-text {
+    color: #444CE0;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    margin-top: 50px;
+}
+
+.form_subtitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.check-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    /* 입력 필드 오른쪽에 여백 */
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+    /* 아이콘이 클릭되지 않도록 */
+}
