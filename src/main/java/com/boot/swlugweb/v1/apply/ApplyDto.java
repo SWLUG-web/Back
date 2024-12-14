@@ -1,4 +1,4 @@
 package com.boot.swlugweb.v1.apply;
 
-public class applyDto {
+public class ApplyDto {
 }
