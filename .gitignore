@@ -109,7 +109,7 @@ desktop.ini
 
 # Environment files
 .env
-#application.properties
+application.properties
 
 #프론트
 templeates/
