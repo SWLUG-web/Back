@@ -109,11 +109,8 @@ desktop.ini
 
 # Environment files
 .env
-
-#아직 DB 설정이 없어서...나중에 DB 설정하면 얘네도 ignore 추가해야할 것 같아여
-application.properties
-application.yml
+#application.properties
 
 #프론트
 templeates/
-/src/main/front/
+#/src/main/front/
