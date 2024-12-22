@@ -7,8 +7,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
-@EnableJpaRepositories(basePackages = "com.boot.swlugweb.v1.login") // JPA 레포지토리 경로 설정
-@EntityScan(basePackages = "com.boot.swlugweb.v1.login") // 엔티티 클래스 경로 설정
+@EnableJpaRepositories(basePackages = {
+		"com.boot.swlugweb.v1.login",
+		"com.boot.swlugweb.v1.signup"
+}) // JPA 레포지토리 경로 설정
+@EntityScan(basePackages = {
+		"com.boot.swlugweb.v1.login",
+		"com.boot.swlugweb.v1.signup"
+}) // 엔티티 클래스 경로 설정
 public class SwlugWebApplication {
 
 	public static void main(String[] args) {
