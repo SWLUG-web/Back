@@ -13,30 +13,27 @@ public class SignupUserInfoDomain {
     //user_info 테이블에 들어갈 객체 정의
 
     @Id
-    @Column(name = "user_id")
-    private String user_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //auto_increment 설정
+    @Column(name = "user_info_num")
+    private Integer userInfoNum;
 
     @Version
     private Long version;
 
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "phone")
     private String phone;
 
-    @OneToOne(mappedBy = "signupUserInfo", cascade = CascadeType.ALL)
+    // FK를 주테이블이 갖는 일대일 단방향 관계에서는 대상 테이블에 해당하는 클래스를 참조 필드로 작성
+    // name에 외래키 이름 작성
+    @OneToOne()
+    @JoinColumn(name = "users_num")
     private SignupUsersDomain signupUsers;
 
-    @OneToOne(mappedBy = "signupUserInfoDomain", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne()
+    @JoinColumn(name = "type_num")
     private SignupUserRuleTypeDomain signupUserRuleType;
 
-    //생성자 선언
-    public SignupUserInfoDomain() {}
-
-    // 연관관계 편의 메서드 (선택 사항)
-//    public void setSignupUsers(SignupUsersDomain signupUsers) {
-//        this.signupUsers = signupUsers;
-//    }
-//
-//    public void setSignupUserRuleType(SignupUserRuleTypeDomain signupUserRuleType) {
-//        this.signupUserRuleType = signupUserRuleType;
-//    }
 }

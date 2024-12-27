@@ -1,7 +1,9 @@
 package com.boot.swlugweb.v1.signup;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -27,4 +29,5 @@ public class SignupConfig {
 
         return http.build();
     }
+
 }

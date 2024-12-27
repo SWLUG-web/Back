@@ -21,63 +21,64 @@ public class SignupService {
     private final PasswordEncoder passwordEncoder; //비밀번호 암호화 -> 추후 변경 가능성O
 
     // userInfo entitiy변경 메서드
-    public SignupUserInfoDomain ConvertUserInfoToDomain(SignupRequestDto signupRequestDto){
+    public SignupUserInfoDomain ConvertUserInfoToDomain(SignupRequestDto signupRequestDto, SignupUsersDomain signupUsersDomain, SignupUserRuleTypeDomain signupUserRuleTypeDomain){
         SignupUserInfoDomain signupUserInfoDomain = new SignupUserInfoDomain();
-        signupUserInfoDomain.setUser_id(signupRequestDto.getUser_id());
         signupUserInfoDomain.setEmail(signupRequestDto.getEmail());
         signupUserInfoDomain.setPhone(signupRequestDto.getPhone());
+        signupUserInfoDomain.setSignupUsers(signupUsersDomain); // FK 매핑
+        signupUserInfoDomain.setSignupUserRuleType(signupUserRuleTypeDomain); // FK 매핑
 
         return signupUserInfoDomain;
     }
 
     // users entitiy변경 메서드
-    public SignupUsersDomain ConvertUsersToDomain(SignupRequestDto signupRequestDto){
+    private SignupUsersDomain convertUsersToDomain(SignupRequestDto signupRequestDto) {
         SignupUsersDomain signupUsersDomain = new SignupUsersDomain();
-        signupUsersDomain.setUser_id(signupRequestDto.getUser_id());
-        signupUsersDomain.setPw(passwordEncoder.encode(signupRequestDto.getPw()));
-        // test db에 있는 테이믈 맞춤
-        signupUsersDomain.setId(0);
-        signupUsersDomain.setAccount_locked(0);
-        signupUsersDomain.setPassword("");
-        signupUsersDomain.setTry_count(0);
-        signupUsersDomain.setUserId("test111");
-
-
+        signupUsersDomain.setPw(passwordEncoder.encode(signupRequestDto.getPw())); // 비밀번호 암호화
+        signupUsersDomain.setUserId(signupRequestDto.getUserId());
         return signupUsersDomain;
     }
 
-    public SignupUserRuleTypeDomain ConvertUserRuleTypeToDomain(SignupRequestDto signupRequestDto){
+    // userRuleType Entity 변환 메서드
+    private SignupUserRuleTypeDomain convertUserRuleTypeToDomain(SignupRequestDto signupRequestDto) {
         SignupUserRuleTypeDomain signupUserRuleTypeDomain = new SignupUserRuleTypeDomain();
-        signupUserRuleTypeDomain.setUser_id(signupRequestDto.getUser_id());
         signupUserRuleTypeDomain.setNickname(signupRequestDto.getNickname());
-        signupUserRuleTypeDomain.setRuleType(1);
+        signupUserRuleTypeDomain.setRole_type(1); // 기본 ruleType 설정
+        signupUserRuleTypeDomain.setUserId(signupRequestDto.getUserId());
         return signupUserRuleTypeDomain;
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public void registerUser(SignupRequestDto signupRequestDto) {
 
-        System.out.println(signupRequestDto.getUser_id());
+        //System.out.println(signupRequestDto.getUserId());
 
         //ID 중복 여부 확인
-        if (signupUserInfoRepository.existsById(signupRequestDto.getUser_id())) {
-            throw new IllegalArgumentException("이미 사용중인 ID입니다.");
-        }
+//        if (signupUserInfoRepository.existsById(signupRequestDto.getUser_id())) {
+//            throw new IllegalArgumentException("이미 사용중인 ID입니다.");
+//        }
 
-        //테이블이 양방향임!
-        //1. 엔티티 설정
-        SignupUserInfoDomain signupUserInfoDomain = ConvertUserInfoToDomain(signupRequestDto);
-        SignupUsersDomain signupUsersDomain = ConvertUsersToDomain(signupRequestDto);
-        SignupUserRuleTypeDomain signupUserRuleTypeDomain = ConvertUserRuleTypeToDomain(signupRequestDto);
+        //users -> rule_type -> user_info 순 저장
+        // 1. Users 테이블 저장
+        SignupUsersDomain signupUsersDomain = convertUsersToDomain(signupRequestDto);
 
-        //2. 연관관계 설정
-        signupUserInfoDomain.setSignupUserRuleType(signupUserRuleTypeDomain);
-        signupUserInfoDomain.setSignupUsers(signupUsersDomain);
+        System.out.println("users id:"+signupUsersDomain.getUserId());
+        signupUsersDomain = signupUsersRepository.save(signupUsersDomain);
 
-        System.out.println("users 테이블"+signupUsersDomain.getUserId());
+        System.out.println("save");
 
-        //3. 순차적으로 저장
+        // 2. UserRuleType 테이블 저장
+        SignupUserRuleTypeDomain signupUserRuleTypeDomain = convertUserRuleTypeToDomain(signupRequestDto);
+        System.out.println("user_type id:"+signupUserRuleTypeDomain.getUserId());
+        signupUserRuleTypeDomain = signupUserRuleTypeRepository.save(signupUserRuleTypeDomain);
+        System.out.println("save");
+
+
+        // 3. UserInfo 테이블 저장
+        SignupUserInfoDomain signupUserInfoDomain = ConvertUserInfoToDomain(signupRequestDto, signupUsersDomain, signupUserRuleTypeDomain);
         signupUserInfoRepository.save(signupUserInfoDomain);
+
+        System.out.println("save");
 
         System.out.println("success to save the data in tables");
 
