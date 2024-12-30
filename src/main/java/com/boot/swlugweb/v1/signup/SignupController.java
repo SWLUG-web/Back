@@ -16,7 +16,7 @@ public class SignupController {
     //회원가입 진행 -> 받는 파라미터로 이메일 인증 번호도 같이 받아야 함
     @PostMapping("/signup") //사용자가 작성한 폼을 받아옴
     public String register(@RequestBody SignupRequestDto signuprequestdto) {
-        System.out.println("User ID: " + signuprequestdto.getUser_id());
+        System.out.println("User ID: " + signuprequestdto.getUserId());
         System.out.println("Email: " + signuprequestdto.getEmail());
         System.out.println("Phone: " + signuprequestdto.getPhone());
         signupService.registerUser(signuprequestdto);
