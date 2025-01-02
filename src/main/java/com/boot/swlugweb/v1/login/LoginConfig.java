@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
+
 @Configuration
 @EnableWebSecurity
 public class LoginConfig {
@@ -24,9 +26,16 @@ public class LoginConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/login").permitAll()
                         .requestMatchers("/api/v1/login/check").permitAll()
+                        .requestMatchers("/api/v1/login/logout").permitAll() // 로그아웃 경로 허용 추가
                         .anyRequest().authenticated()
                 );
 
         return http.build();
+    }
+
+    // HTTP 세션 이벤트 리스너 설정
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 }
