@@ -3,8 +3,10 @@ package com.boot.swlugweb.v1.login;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/api/v1/login") //URL 경로
+@RequestMapping("/api/v1/login")
 public class LoginController {
     private final LoginService loginService;
 
@@ -12,18 +14,43 @@ public class LoginController {
         this.loginService = loginService;
     }
 
-    @PostMapping //POST 요청 처리
-    //HTTP 응답 상태코드 + 응답값 반환
-    public ResponseEntity<String> login(@RequestBody LoginRequestDto loginRequestDto) {
-        boolean isAuthenticated = loginService.authenticateUser(
+    // 로그인 페이지 GET 요청 처리 (front 페이지와 연결해줘야 함)
+    @GetMapping
+    public ResponseEntity<String> loginPage() {
+        return ResponseEntity.ok("Login page");
+    }
+
+    // 로그인 처리 POST 요청
+    @PostMapping("/authenticate")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+        LoginResponseDto response = loginService.authenticateUser(
                 loginRequestDto.getUserId(),
                 loginRequestDto.getPassword()
         );
 
-        if (isAuthenticated) { //
-            return ResponseEntity.ok("Login successful!");
+        if (response.isSuccess()) {
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(401).body("Invalid credentials");
+            return ResponseEntity.status(401).body(response);
         }
+    }
+
+    // 로그아웃 처리
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        loginService.logout();
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
+    // 로그인 상태 확인 (테스트 목적- 임시로 구현)
+    @GetMapping("/check")
+    public ResponseEntity<?> checkLoginStatus() {
+        if (loginService.isLoggedIn()) {
+            return ResponseEntity.ok(Map.of(
+                    "loggedIn", true,
+                    "userId", loginService.getCurrentUser()
+            ));
+        }
+        return ResponseEntity.ok(Map.of("loggedIn", false));
     }
 }
