@@ -1,19 +1,44 @@
 package com.boot.swlugweb.v1.login;
 
+import jakarta.servlet.http.HttpSession;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
 public class LoginService {
     private final LoginRepository loginRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final HttpSession session;
 
-    public LoginService(LoginRepository loginRepository) {
+    public LoginService(LoginRepository loginRepository,
+                        PasswordEncoder passwordEncoder,
+                        HttpSession session) {
         this.loginRepository = loginRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.session = session;
     }
 
-    // 사용자 인증 메서드
-    public boolean authenticateUser(String userId, String password) {
-        Optional<LoginDomain> user = loginRepository.findById(userId);  //userId로 사용자 검색
-        return user.map(u -> u.getPw().equals(password)).orElse(false); //비밀번호 일치 여부 확인 -> boolean 리턴
+    public LoginResponseDto authenticateUser(String userId, String password) {
+        Optional<LoginDomain> user = loginRepository.findById(userId);
+
+        if (user.isPresent() && passwordEncoder.matches(password, user.get().getPw())) {
+            // 세션에 사용자 정보 저장
+            session.setAttribute("USER", userId);
+            return new LoginResponseDto(true, "Login successful", userId);
+        }
+        return new LoginResponseDto(false, "Invalid credentials", null);
+    }
+
+    public void logout() {
+        session.invalidate();
+    }
+
+    public String getCurrentUser() {
+        return (String) session.getAttribute("USER");
+    }
+
+    public boolean isLoggedIn() {
+        return session.getAttribute("USER") != null;
     }
 }
