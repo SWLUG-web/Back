@@ -28,11 +28,11 @@ public class AdminUserInfoDomain {
 
     // FK를 주테이블이 갖는 일대일 단방향 관계에서는 대상 테이블에 해당하는 클래스를 참조 필드로 작성
     // name에 외래키 이름 작성
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "users_num")
     private AdminUsersDomain usersNum;
 
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "type_num")
     private AdminUserTypeDomain userType;
 
