@@ -51,6 +51,9 @@ dependencies {
 	//SMTP
 	implementation 'org.springframework.boot:spring-boot-starter-mail:3.4.1'
 
+	// MongoDB
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
 
 
 }
