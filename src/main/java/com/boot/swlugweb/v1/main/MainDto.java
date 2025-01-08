@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class MainDto {
+    private String id;
     private Integer noticeId;
     private String title;
     private LocalDateTime createAt;
-    private LocalDateTime updateAt;
-    private Long id;
+    private String userId;
 }
