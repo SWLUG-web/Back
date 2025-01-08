@@ -108,9 +108,7 @@ desktop.ini
 *.sqlite
 
 # Environment files
-.env
 application.properties
 
 #프론트
 templeates/
-#/src/main/front/
