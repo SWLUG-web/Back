@@ -4,13 +4,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value =  {"/", "/main"})
 public class MainController {
 
-    @GetMapping
-    public String mainPage() {
-        return "Hello World";
+    private final MainService mainService;
+
+    public MainController(MainService mainService) {
+        this.mainService = mainService;
     }
-    
+
+    @GetMapping
+    public List<MainDomain> mainPage() {
+        return mainService.getLatestNotices();
+    }
+
 }

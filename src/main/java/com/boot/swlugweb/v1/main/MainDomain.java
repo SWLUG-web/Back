@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "swuweb")
+@Document(collection = "SwlugWeb")
 @Getter
 @Setter
 public class MainDomain {
@@ -27,9 +27,6 @@ public class MainDomain {
 
     @Field("created_at")
     private LocalDateTime createdAt;
-
-    @Field("updated_at")
-    private LocalDateTime updatedAt;
 
     @Field("is_pin")
     private boolean isPin;
