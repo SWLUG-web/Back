@@ -18,7 +18,7 @@ public class MainController {
 
     @GetMapping
     public List<MainDomain> mainPage() {
-        return mainService.getLatestNotices();
+        return mainService.getLatestPosts();
     }
 
 }
