@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SignupUsersRepository extends JpaRepository<SignupUsersDomain, String> {
+    boolean existsByuserId(String userId);
 }

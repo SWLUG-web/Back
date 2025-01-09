@@ -54,9 +54,9 @@ public class SignupService {
         //System.out.println(signupRequestDto.getUserId());
 
         //ID 중복 여부 확인
-//        if (signupUserInfoRepository.existsById(signupRequestDto.getUser_id())) {
-//            throw new IllegalArgumentException("이미 사용중인 ID입니다.");
-//        }
+        if (signupUsersRepository.existsByuserId(signupRequestDto.getUserId())) {
+            throw new IllegalArgumentException("이미 사용중인 ID입니다.");
+        }
 
         //users -> rule_type -> user_info 순 저장
         // 1. Users 테이블 저장
