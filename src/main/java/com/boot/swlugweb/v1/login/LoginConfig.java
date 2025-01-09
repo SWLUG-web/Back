@@ -16,17 +16,20 @@ public class LoginConfig {
     @Bean
     public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api/v1/login/**")
+                .securityMatcher("/api/v1/login/**", "/api/v1/password/**")  // password 경로 추가
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .maximumSessions(1) // 동시 세션 제한
-                        .maxSessionsPreventsLogin(false) // 새로운 로그인 시 이전 세션 만료
+                        .maximumSessions(1)
+                        .maxSessionsPreventsLogin(false)
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/login").permitAll()
                         .requestMatchers("/api/v1/login/check").permitAll()
-                        .requestMatchers("/api/v1/login/logout").permitAll() // 로그아웃 경로 허용 추가
+                        .requestMatchers("/api/v1/login/logout").permitAll()
+                        .requestMatchers("/api/v1/password/verify").permitAll()
+                        .requestMatchers("/api/v1/password/verify-auth").permitAll()
+                        .requestMatchers("/api/v1/password/reset").permitAll()
                         .anyRequest().authenticated()
                 );
 
