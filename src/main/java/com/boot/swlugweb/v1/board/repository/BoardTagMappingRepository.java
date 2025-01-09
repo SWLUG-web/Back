@@ -10,10 +10,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BoardTagMappingRepository extends JpaRepository<BoardTagMapping, Long> {
-    void deleteByBoard(Board board);
+    void deleteByBoard(Optional<Board> board);
 
     @Query("SELECT m FROM BoardTagMapping m WHERE m.board = :board")
     List<BoardTagMapping> findByBoard(@Param("board") Board board);
