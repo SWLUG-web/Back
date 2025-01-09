@@ -1,6 +1,7 @@
 
 package com.boot.swlugweb.v1.notice.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,8 +23,11 @@ public class Notice {
     private String userId;
     private String title;
     private String content;
-    private String imageUrl;
+    private String image;
+    private String imagePath;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime updateAt;
 
 

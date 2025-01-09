@@ -9,8 +9,10 @@ import com.boot.swlugweb.v1.notice.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,15 +24,15 @@ public class NoticeController {
 
     // 공지글 등록
     @PostMapping("/save")
-    public RedirectView createNotice(@RequestBody CreateNoticeDto createNoticeDto) {
-       noticeService.createNotice(createNoticeDto);
+    public RedirectView createNotice(@RequestPart(value="createNoticeDto",required=false) CreateNoticeDto createNoticeDto,@RequestPart(value="noticeImg", required=false) MultipartFile noticeImg) throws IOException {
+       noticeService.createNotice(createNoticeDto, noticeImg);
         return new RedirectView("/api/notice/list");
     }
 
     // 공지글 수정
-    @PutMapping("/write")
-    public RedirectView updateNotice(@RequestBody UpdateNoticeDto updateNoticeDto) {
-        noticeService.updateNotice(updateNoticeDto);
+    @PutMapping("/write/{NoticeId}")
+    public RedirectView updateNotice(@PathVariable("NoticeId") Long noticeId, @RequestPart(value="updateNoticeDto",required=false) UpdateNoticeDto updateNoticeDto,@RequestPart(value="noticeImg", required=false) MultipartFile noticeImg) throws IOException {
+        noticeService.updateNotice(noticeId,updateNoticeDto, noticeImg);
         return new RedirectView("/api/notice/list");  // 수정 후 리스트 페이지로 리다이렉트
     }
 
@@ -64,4 +66,4 @@ public class NoticeController {
 
 
 
-}a
+}
