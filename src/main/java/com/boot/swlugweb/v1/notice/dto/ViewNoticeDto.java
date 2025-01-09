@@ -1,3 +1,4 @@
+
 package com.boot.swlugweb.v1.notice.dto;
 
 import lombok.Builder;
@@ -17,3 +18,4 @@ public class ViewNoticeDto {
     private String roleType;
     private Long id;
 }
+
