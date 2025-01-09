@@ -13,16 +13,11 @@ import com.boot.swlugweb.v1.board.dto.request.BoardUpdate2Dto;
 import com.boot.swlugweb.v1.board.dto.response.BoardView2Dto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,13 +45,10 @@ public class BoardService {
     @Autowired(required = true)
     private BoardTagMappingRepository boardTagMappingRepository;
 
-    //사진 업로드
-    @Value("${uploadPath}")
-    private String uploadPath;
 
     //게시글 생성
     @Transactional
-    public Long createBoard(BoardCreate2Dto boardCreate2Dto, MultipartFile boardImg) throws IOException {
+    public Long createBoard(BoardCreate2Dto boardCreate2Dto) {
 
         // Board 생성
         Board board = new Board();
@@ -77,16 +69,7 @@ public class BoardService {
         boardDetail.setBoard(savedBoard);
         boardDetail.setUserId(String.valueOf(boardCreate2Dto.getId()));
         boardDetail.setBoardContents(boardCreate2Dto.getContents());
-
-        //사진
-        UUID uuid = UUID.randomUUID();
-        String fileName = uuid.toString()+"_"+boardImg.getOriginalFilename();
-        File boardImgFile = new File(uploadPath, fileName);
-        boardImg.transferTo(boardImgFile);
-        boardDetail.setImage(fileName);
-        boardDetail.setImagePath(uploadPath+"/"+fileName);
-        //이미지 로직
-
+        boardDetail.setImage(boardCreate2Dto.getImageUrl());
         boardDetailRepository.save(boardDetail);
 
         // Tag 처리
@@ -112,94 +95,25 @@ public class BoardService {
     }
 
 
-//    //수정
-//    @Transactional
-//    public void updateBoard(BoardUpdate2Dto boardUpdate2Dto) {
-//        Board board = boardRepository.findById(boardUpdate2Dto.getBoardId().longValue())
-//                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
-//
-//        board.setBoardCategory(boardUpdate2Dto.getCategory());
-//        board.setBoardTitle(boardUpdate2Dto.getTitle());
-//        board.setUpdateAt(boardUpdate2Dto.getUpdateAt() != null ? boardUpdate2Dto.getUpdateAt() : LocalDateTime.now());
-//
-//        // 기존 BoardDetail 수정
-//        BoardDetail boardDetail = boardDetailRepository.findById(board.getBoardId())
-//                .orElseThrow(() -> new IllegalArgumentException("게시글 상세정보를 찾을 수 없습니다."));
-//        boardDetail.setBoardContents(boardUpdate2Dto.getContents());
-//        boardDetail.setImage(boardUpdate2Dto.getImageUrl());
-//        boardDetailRepository.save(boardDetail);
-//
-//        // 기존 태그 매핑 삭제
-//        boardTagMappingRepository.deleteByBoard(board);
-//
-//        // 새 태그 매핑 생성
-//        if (boardUpdate2Dto.getTag() != null && !boardUpdate2Dto.getTag().isEmpty()) {
-//            for (String tagName : boardUpdate2Dto.getTag()) {
-//                BoardTag tag = boardTagRepository.findByTagName(tagName)
-//                        .orElseGet(() -> {
-//                            BoardTag newTag = new BoardTag();
-//                            newTag.setTagName(tagName);
-//                            return boardTagRepository.save(newTag);
-//                        });
-//
-//                BoardTagMapping mapping = new BoardTagMapping();
-//                mapping.setBoard(board);
-//                mapping.setBoardTag(tag);
-//                mapping.setUserId(String.valueOf(boardUpdate2Dto.getId()));
-//                boardTagMappingRepository.save(mapping);
-//            }
-//        }
-//    }
-
-
     //수정
     @Transactional
-    public void updateBoard(BoardUpdate2Dto boardUpdate2Dto, MultipartFile boardImg) throws IOException {
-        Optional<Board> optionalBoard= Optional.ofNullable(boardRepository.findById(boardUpdate2Dto.getBoardId().longValue())
-                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다.")));
+    public void updateBoard(BoardUpdate2Dto boardUpdate2Dto) {
+        Board board = boardRepository.findById(boardUpdate2Dto.getBoardId().longValue())
+                .orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다."));
 
-        if(optionalBoard.isPresent()) {
-            Board board = optionalBoard.get();
-            //업데이트할 필드만 업데이트
-
-            if(boardUpdate2Dto.getCategory()!=null){
-                board.setBoardCategory(boardUpdate2Dto.getCategory());
-            }
-            if(boardUpdate2Dto.getTitle()!=null){
-                board.setBoardTitle(boardUpdate2Dto.getTitle());
-            }
-            board.setUpdateAt(boardUpdate2Dto.getUpdateAt() != null ? boardUpdate2Dto.getUpdateAt() : LocalDateTime.now());
-
-            boardRepository.save(board);
-        }
-
+        board.setBoardCategory(boardUpdate2Dto.getCategory());
+        board.setBoardTitle(boardUpdate2Dto.getTitle());
+        board.setUpdateAt(boardUpdate2Dto.getUpdateAt() != null ? boardUpdate2Dto.getUpdateAt() : LocalDateTime.now());
 
         // 기존 BoardDetail 수정
-        Optional<BoardDetail> optionalBoardDetail = Optional.ofNullable(boardDetailRepository.findById(optionalBoard.get().getBoardId())
-                .orElseThrow(() -> new IllegalArgumentException("게시글 상세정보를 찾을 수 없습니다.")));
-
-        if(optionalBoard.isPresent()) {
-            BoardDetail boardDetail = optionalBoardDetail.get();
-
-            if(boardUpdate2Dto.getContents()!=null){
-                boardDetail.setBoardContents(boardUpdate2Dto.getContents());
-            }
-            if(boardImg != null){
-                UUID uuid = UUID.randomUUID();
-                String fileName = uuid.toString()+"_"+boardImg.getOriginalFilename();
-                File boardImgFile = new File(uploadPath, fileName);
-                boardImg.transferTo(boardImgFile);
-                boardDetail.setImage(fileName);
-                boardDetail.setImagePath(uploadPath+"/"+fileName);
-            }
-
-
-
-            boardDetailRepository.save(boardDetail);
-        }
+        BoardDetail boardDetail = boardDetailRepository.findById(board.getBoardId())
+                .orElseThrow(() -> new IllegalArgumentException("게시글 상세정보를 찾을 수 없습니다."));
+        boardDetail.setBoardContents(boardUpdate2Dto.getContents());
+        boardDetail.setImage(boardUpdate2Dto.getImageUrl());
+        boardDetailRepository.save(boardDetail);
 
         // 기존 태그 매핑 삭제
-        boardTagMappingRepository.deleteByBoard(optionalBoard);
+        boardTagMappingRepository.deleteByBoard(board);
 
         // 새 태그 매핑 생성
         if (boardUpdate2Dto.getTag() != null && !boardUpdate2Dto.getTag().isEmpty()) {
@@ -212,7 +126,7 @@ public class BoardService {
                         });
 
                 BoardTagMapping mapping = new BoardTagMapping();
-                mapping.setBoard(optionalBoard.get());
+                mapping.setBoard(board);
                 mapping.setBoardTag(tag);
                 mapping.setUserId(String.valueOf(boardUpdate2Dto.getId()));
                 boardTagMappingRepository.save(mapping);

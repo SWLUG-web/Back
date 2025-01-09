@@ -34,8 +34,6 @@ public class BoardCreate2Dto {
     //@Schema(description = "블로그 내용", example = "팀플 활동")
     private String contents;
 
-
-//    private String image;
-
+    //@Schema(description = "블로그 사진")
     private String imageUrl;
 }
