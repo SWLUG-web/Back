@@ -8,10 +8,8 @@ import com.boot.swlugweb.v1.board.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -35,15 +33,15 @@ public class BoardController {
 
     @PostMapping("/save")
     //@Operation(summary = "게시글 생성", description = "게시글을 생성합니다.")
-    public RedirectView createBoard(@RequestPart(value="boardCreate2Dto", required=false) BoardCreate2Dto boardCreate2Dto, @RequestPart(value="boardImg", required=false) MultipartFile boardImg) throws IOException {
-        boardService.createBoard(boardCreate2Dto, boardImg);
+    public RedirectView createBoard(@RequestBody BoardCreate2Dto boardCreate2Dto) {
+        boardService.createBoard(boardCreate2Dto);
         return new RedirectView("/api/board/blog");
     }
 
     @PutMapping("/write/{id}")
     //@Operation(summary = "게시글 수정", description = "게시글을 수정합니다.")
-    public RedirectView updateBoard(@RequestBody BoardUpdate2Dto boardUpdate2Dto, @RequestPart(value="boardImg", required=false) MultipartFile boardImg) throws IOException {
-        boardService.updateBoard(boardUpdate2Dto, boardImg);
+    public RedirectView updateBoard(@RequestBody BoardUpdate2Dto boardUpdate2Dto) {
+        boardService.updateBoard(boardUpdate2Dto);
         return new RedirectView("/api/board/blog");
     }
 

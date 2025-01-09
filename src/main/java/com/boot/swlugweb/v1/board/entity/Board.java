@@ -43,7 +43,6 @@ public class Board {
 
 
     @Column(name="updated_at", nullable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime updateAt;
 
 
