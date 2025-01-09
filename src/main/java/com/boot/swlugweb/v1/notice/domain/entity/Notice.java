@@ -1,3 +1,4 @@
+
 package com.boot.swlugweb.v1.notice.domain.entity;
 
 import jakarta.persistence.*;
@@ -27,3 +28,4 @@ public class Notice {
 
 
 }
+

@@ -1,5 +1,5 @@
-package com.boot.swlugweb.v1.notice.service;
 
+package com.boot.swlugweb.v1.notice.service;
 
 import com.boot.swlugweb.v1.notice.domain.entity.Notice;
 import com.boot.swlugweb.v1.notice.domain.repository.NoticeRepository;
@@ -8,6 +8,7 @@ import com.boot.swlugweb.v1.notice.dto.UpdateNoticeDto;
 import com.boot.swlugweb.v1.notice.dto.ViewNoticeDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -114,3 +115,4 @@ public class NoticeService {
 
 
 }
+
