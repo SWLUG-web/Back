@@ -1,4 +1,4 @@
 package com.boot.swlugweb.v1.blog;
 
-public class blogRepository {
+public class BlogConfig {
 }
