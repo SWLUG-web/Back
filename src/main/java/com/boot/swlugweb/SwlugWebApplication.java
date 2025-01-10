@@ -16,7 +16,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 		"com.boot.swlugweb.v1.notice",
 		"com.boot.swlugweb.v1.main",
 		"com.boot.swlugweb.v1.mypage",
-		"com.boot.swlugweb.v1.password"
+		"com.boot.swlugweb.v1.password",
+		"com.boot.swlugweb.v1.blog"
 }) // MongoDB 레포지토리 경로 설정
 @EnableJpaRepositories(basePackages = {
 		"com.boot.swlugweb.v1.login",
@@ -27,7 +28,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 		"com.boot.swlugweb.v1.notice",
 		"com.boot.swlugweb.v1.main",
 		"com.boot.swlugweb.v1.mypage",
-		"com.boot.swlugweb.v1.password"
+		"com.boot.swlugweb.v1.password",
+		"com.boot.swlugweb.v1.blog"
 
 
 }) // JPA 레포지토리 경로 설정
@@ -41,7 +43,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 		"com.boot.swlugweb.v1.notice",
 		"com.boot.swlugweb.v1.main",
 		"com.boot.swlugweb.v1.mypage",
-		"com.boot.swlugweb.v1.password"
+		"com.boot.swlugweb.v1.password",
+		"com.boot.swlugweb.v1.blog"
 }) // 엔티티 클래스 경로 설정
 
 
