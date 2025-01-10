@@ -2,7 +2,9 @@ package com.boot.swlugweb.v1.blog;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
 @Document(collection = "SwlugWeb")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class BlogDomain {
 
     @Id
