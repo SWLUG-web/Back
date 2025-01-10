@@ -21,6 +21,7 @@ public class MyPageController {
         }
 
         MyPageResponseDto myPageInfo = myPageService.getUserInfo(userId);
+
         return ResponseEntity.ok(myPageInfo);
     }
 }
