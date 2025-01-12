@@ -36,7 +36,7 @@ public class BlogService {
         blogDomain.setBoardCategory(blogCreateDto.getBoardCategory());
         blogDomain.setBoardTitle(blogCreateDto.getBoardTitle());
         blogDomain.setBoardContents(blogCreateDto.getBoardContent());
-        blogDomain.setCreateAt(blogCreateDto.getCreateAt() != null ? blogCreateDto.getCreateAt() : LocalDateTime.now());
+        blogDomain.setCreateAt(LocalDateTime.now());
         blogDomain.setTag(blogCreateDto.getTag());
         blogDomain.setImage(blogCreateDto.getImageUrl());
         blogDomain.setIsPin(false);
@@ -77,5 +77,22 @@ public class BlogService {
 
         // 저장
         blogDetailRepository.save(blog);
+    }
+
+    // blog 삭제
+    public void deleteBlog(BlogDeleteRequestDto blogDeleteRequestDto, String userId) {
+        // 1. ID로 해당 블로그 조회
+        String id = blogDeleteRequestDto.getId();
+
+        BlogDomain blog = blogDetailRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Blog post not found: " + id));
+
+        // 2. 작성자(userId) 확인
+        if (!blog.getUserId().equals(userId)) {
+            throw new SecurityException("You are not authorized to delete this post.");
+        }
+
+        // 3. 데이터 삭제
+        blogDetailRepository.deleteById(id);
     }
 }

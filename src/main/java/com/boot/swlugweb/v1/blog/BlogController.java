@@ -59,4 +59,18 @@ public class BlogController {
         blogService.updateBlog(blogUpdateRequestDto, userId);
         return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
     }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteBlog(
+            @RequestBody BlogDeleteRequestDto blogDeleteRequestDto,
+            HttpSession session
+    ) {
+        String userId = (String) session.getAttribute("USER");
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        blogService.deleteBlog(blogDeleteRequestDto, userId);
+        return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
+    }
 }
