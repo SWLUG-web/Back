@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 
 @RestController
-@RequestMapping("/api/v1/mypage")
+@RequestMapping("/mypage")
 public class MyPageController {
     private final MyPageService myPageService;
 

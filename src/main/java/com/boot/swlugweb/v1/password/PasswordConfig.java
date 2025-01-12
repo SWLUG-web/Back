@@ -13,11 +13,11 @@ public class PasswordConfig {
     @Bean
     public SecurityFilterChain passwordFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api/v1/password/**")
+                .securityMatcher("/password/**")
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/password/request-reset").permitAll()
-                        .requestMatchers("/api/v1/password/reset").permitAll()
+                        .requestMatchers("/password/request-reset").permitAll()
+                        .requestMatchers("/password/reset").permitAll()
                         .anyRequest().authenticated()
                 );
 
