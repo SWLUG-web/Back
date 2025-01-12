@@ -34,6 +34,12 @@ public class BlogController {
         return ResponseEntity.ok(blogList).getBody();
     }
 
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<BlogDomain> getBlogDetail(@PathVariable String id) {
+        BlogDomain blog = blogService.getBlogDetail(id);
+        return ResponseEntity.ok(blog);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> saveBlog(@RequestBody BlogCreateDto blogCreateDto,
                                  HttpSession session) {

@@ -28,6 +28,12 @@ public class BlogService {
         return blogRepository.findByBoardCategory(pageable);
     }
 
+    // 게시물 상세 조회
+    public BlogDomain getBlogDetail(String id) {
+        return blogDetailRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(id+" Blog post not found"));
+    }
+
     // 게시물 저장
     public BlogDomain createBlog(BlogCreateDto blogCreateDto, String userId) {
         BlogDomain blogDomain = new BlogDomain();
