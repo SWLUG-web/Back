@@ -22,7 +22,7 @@ public class SignupConfig {
     @Bean
     public SecurityFilterChain signupFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api/v1/signup/**")
+                .securityMatcher("/signup/**")
                 .csrf((csrf) -> csrf.disable()) //csrf 보호 비활성화
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll()  //해당 경로 모든 요청 허용
                 );
