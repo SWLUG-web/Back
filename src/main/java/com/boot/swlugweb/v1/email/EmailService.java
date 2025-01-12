@@ -58,9 +58,9 @@ public class EmailService {
         makeNumberRend();
         String setFrom = "likeeu23@naver.com"; //emailConfig에 설정한 자신의 이메일 주소
         String toMail = email; //controller에서 전달한 사용자 이메일
-        String title = "회원 가입 인증 이메일입니다.";
+        String title = "슈러그 인증번호 입니다.";
         //이메일 내용 작성 -> html 형식으로 작성하기
-        String content = "안녕하세요. 다음의 인증번호를 웹 페이지에 올바르게 입력해주세요." +
+        String content = "안녕하세요. 슈러그입니다. 다음의 인증번호를 웹 페이지에 올바르게 입력해주세요." +
                 "<br><br>" +
                 "인증번호는" + authNumber + "입니다." +
                 "<br>" +
