@@ -28,7 +28,12 @@ public class BlogController {
 
     @GetMapping("/{page}")
     public List<BlogDto> getBlogsByPage(@PathVariable int page) {
-        page = page -1;
+        // page가 0보다 작으면 0으로 설정
+        if (page < 0) {
+            page = 0;
+        } else {
+            page = page - 1;
+        }
         List<BlogDto> blogList = blogService.getBlogs(page);
 
         return ResponseEntity.ok(blogList).getBody();
