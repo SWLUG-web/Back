@@ -73,7 +73,7 @@ public class BlogService {
         if (blogUpdateRequestDto.getImageUrl() != null) {
             blog.setImage(blogUpdateRequestDto.getImageUrl());
         }
-        blog.setCreateAt(blogUpdateRequestDto.getCreateAt());
+        blog.setCreateAt(LocalDateTime.now());
 
         // 저장
         blogDetailRepository.save(blog);
