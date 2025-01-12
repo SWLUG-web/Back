@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-public class BlogCreateDto {
+public class BlogUpdateDto {
     private Integer boardCategory;
     private String boardTitle;
     private String boardContent;
