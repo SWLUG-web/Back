@@ -45,4 +45,18 @@ public class BlogController {
         blogService.createBlog(blogCreateDto, userId);
         return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
     }
+
+    @PostMapping("/update")
+    public ResponseEntity<String> updateBlogPost(
+            @RequestBody BlogUpdateRequestDto blogUpdateRequestDto,
+            HttpSession session
+    ) {
+        String userId = (String) session.getAttribute("USER");
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        blogService.updateBlog(blogUpdateRequestDto, userId);
+        return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
+    }
 }
