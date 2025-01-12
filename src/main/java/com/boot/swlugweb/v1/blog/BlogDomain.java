@@ -10,8 +10,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-@Document(collection = "SwlugWeb")
+@Document(collection = "SwlugWebTest")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,13 +38,19 @@ public class BlogDomain {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // JSON 직렬화 시 포맷 지정
     private LocalDateTime createAt;
 
+    @Field("tag")
+    private List<String> tag;
+
+    @Field("image")
+    private List<String> image;
+
     @Field("is_pin")
     private Boolean isPin = false;
 
     @Field("is_secure")
-    private Boolean isSecure = false;
+    private Integer isSecure = 0;
 
     @Field("is_delete")
-    private Boolean isDelete = false;
+    private Integer isDelete = 0;
 
 }

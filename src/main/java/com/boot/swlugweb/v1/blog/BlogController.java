@@ -34,6 +34,12 @@ public class BlogController {
         return ResponseEntity.ok(blogList).getBody();
     }
 
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<BlogDomain> getBlogDetail(@PathVariable String id) {
+        BlogDomain blog = blogService.getBlogDetail(id);
+        return ResponseEntity.ok(blog);
+    }
+
     @PostMapping("/save")
     public ResponseEntity<?> saveBlog(@RequestBody BlogCreateDto blogCreateDto,
                                  HttpSession session) {
@@ -43,6 +49,34 @@ public class BlogController {
         }
 
         blogService.createBlog(blogCreateDto, userId);
+        return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
+    }
+
+    @PostMapping("/update")
+    public ResponseEntity<String> updateBlogPost(
+            @RequestBody BlogUpdateRequestDto blogUpdateRequestDto,
+            HttpSession session
+    ) {
+        String userId = (String) session.getAttribute("USER");
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        blogService.updateBlog(blogUpdateRequestDto, userId);
+        return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteBlog(
+            @RequestBody BlogDeleteRequestDto blogDeleteRequestDto,
+            HttpSession session
+    ) {
+        String userId = (String) session.getAttribute("USER");
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        blogService.deleteBlog(blogDeleteRequestDto, userId);
         return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
     }
 }
