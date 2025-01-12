@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/password")
+@RequestMapping("/password")
 public class PasswordController {
     private final PasswordService passwordService;
     private final EmailService emailService;

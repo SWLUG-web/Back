@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/login")
 public class LoginController {
     private final LoginService loginService;
 
@@ -15,13 +15,13 @@ public class LoginController {
     }
 
     // 로그인 페이지 GET 요청 처리 (front 페이지와 연결해줘야 함)
-    @GetMapping("/login")
+    @GetMapping
     public ResponseEntity<String> loginPage() {
         return ResponseEntity.ok("Login page");
     }
 
     // 로그인 처리 POST 요청
-    @PostMapping("/login")
+    @PostMapping
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         LoginResponseDto response = loginService.authenticateUser(
                 loginRequestDto.getUserId(),
@@ -36,14 +36,14 @@ public class LoginController {
     }
 
     // 로그아웃 처리
-    @PostMapping("/login/logout")
+    @PostMapping("/logout")
     public ResponseEntity<String> logout() {
         loginService.logout();
         return ResponseEntity.ok("Logged out successfully");
     }
 
     // 로그인 상태 확인 (테스트 목적- 임시로 구현)
-    @GetMapping("/login/check")
+    @GetMapping("/check")
     public ResponseEntity<?> checkLoginStatus() {
         if (loginService.isLoggedIn()) {
             return ResponseEntity.ok(Map.of(

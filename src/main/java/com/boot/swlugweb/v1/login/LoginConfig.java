@@ -16,7 +16,7 @@ public class LoginConfig {
     @Bean
     public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
         http
-                .securityMatcher("/api/v1/login/**", "/api/v1/password/**")  // password 경로 추가
+                .securityMatcher("/login/**", "/password/**")  // Updated paths
                 .csrf((csrf) -> csrf.disable())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -24,17 +24,18 @@ public class LoginConfig {
                         .maxSessionsPreventsLogin(false)
                 )
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/v1/login").permitAll()
-                        .requestMatchers("/api/v1/login/check").permitAll()
-                        .requestMatchers("/api/v1/login/logout").permitAll()
-                        .requestMatchers("/api/v1/password/verify").permitAll()
-                        .requestMatchers("/api/v1/password/verify-auth").permitAll()
-                        .requestMatchers("/api/v1/password/reset").permitAll()
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/login/check").permitAll()
+                        .requestMatchers("/login/logout").permitAll()
+                        .requestMatchers("/password/verify").permitAll()
+                        .requestMatchers("/password/verify-auth").permitAll()
+                        .requestMatchers("/password/reset").permitAll()
                         .anyRequest().authenticated()
                 );
 
         return http.build();
     }
+
 
     // HTTP 세션 이벤트 리스너 설정
     @Bean
