@@ -24,7 +24,7 @@ public class BlogService {
 
     // 게시물 간단 조회
     public List<BlogDto> getBlogs(int page) {
-        Pageable pageable = PageRequest.of(page, 8);
+        Pageable pageable = PageRequest.of(page, 5);
         return blogRepository.findByBoardCategory(pageable);
     }
 

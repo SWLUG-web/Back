@@ -8,7 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "SwlugWeb")
+@Document(collection = "SwlugWebTest")
 @Getter
 @Setter
 public class MainDomain {
@@ -18,9 +18,6 @@ public class MainDomain {
 
     @Field("user_id")
     private String userId;
-
-    @Field("board_category")
-    private long boardCategory;
 
     @Field("board_title")
     private String boardTitle;

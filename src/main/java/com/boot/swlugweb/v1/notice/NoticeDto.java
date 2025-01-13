@@ -1,23 +1,17 @@
-package com.boot.swlugweb.v1.blog;
+package com.boot.swlugweb.v1.notice;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Document(collection = "SwlugWebTest")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class BlogDomain {
+public class NoticeDto {
 
     @Id
     private String id;
@@ -25,14 +19,8 @@ public class BlogDomain {
     @Field("user_id")
     private String userId;
 
-    @Field("board_category")
-    private Integer boardCategory;
-
     @Field("board_title")
     private String boardTitle;
-
-    @Field("board_contents")
-    private String boardContents;
 
     @Field("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") // JSON 직렬화 시 포맷 지정
@@ -40,9 +28,6 @@ public class BlogDomain {
 
     @Field("tag")
     private List<String> tag;
-
-    @Field("image")
-    private List<String> image;
 
     @Field("is_pin")
     private Boolean isPin = false;
@@ -52,5 +37,4 @@ public class BlogDomain {
 
     @Field("is_delete")
     private Integer isDelete = 0;
-
 }

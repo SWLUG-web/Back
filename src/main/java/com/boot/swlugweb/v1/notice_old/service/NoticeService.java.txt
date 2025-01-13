@@ -1,17 +1,15 @@
 
-package com.boot.swlugweb.v1.notice.service;
+package com.boot.swlugweb.v1.notice_old.service;
 
-import com.boot.swlugweb.v1.notice.domain.entity.Notice;
-import com.boot.swlugweb.v1.notice.domain.repository.NoticeRepository;
-import com.boot.swlugweb.v1.notice.dto.CreateNoticeDto;
-import com.boot.swlugweb.v1.notice.dto.UpdateNoticeDto;
-import com.boot.swlugweb.v1.notice.dto.ViewNoticeDto;
+import com.boot.swlugweb.v1.notice_old.domain.entity.Notice;
+import com.boot.swlugweb.v1.notice_old.domain.repository.NoticeRepository;
+import com.boot.swlugweb.v1.notice_old.dto.CreateNoticeDto;
+import com.boot.swlugweb.v1.notice_old.dto.UpdateNoticeDto;
+import com.boot.swlugweb.v1.notice_old.dto.ViewNoticeDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

@@ -1,5 +1,5 @@
 
-package com.boot.swlugweb.v1.notice.domain.entity;
+package com.boot.swlugweb.v1.notice_old.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;

@@ -1,11 +1,11 @@
-package com.boot.swlugweb.v1.blog;
+package com.boot.swlugweb.v1.notice;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BlogDomain {
+public class NoticeDomain {
 
     @Id
     private String id;
@@ -26,7 +26,7 @@ public class BlogDomain {
     private String userId;
 
     @Field("board_category")
-    private Integer boardCategory;
+    private String boardCategory;
 
     @Field("board_title")
     private String boardTitle;
