@@ -1,11 +1,11 @@
 
-package com.boot.swlugweb.v1.notice.controller;
+package com.boot.swlugweb.v1.notice_old.controller;
 
 
-import com.boot.swlugweb.v1.notice.dto.CreateNoticeDto;
-import com.boot.swlugweb.v1.notice.dto.UpdateNoticeDto;
-import com.boot.swlugweb.v1.notice.dto.ViewNoticeDto;
-import com.boot.swlugweb.v1.notice.service.NoticeService;
+import com.boot.swlugweb.v1.notice_old.dto.CreateNoticeDto;
+import com.boot.swlugweb.v1.notice_old.dto.UpdateNoticeDto;
+import com.boot.swlugweb.v1.notice_old.dto.ViewNoticeDto;
+import com.boot.swlugweb.v1.notice_old.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

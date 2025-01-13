@@ -13,33 +13,32 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 		"com.boot.swlugweb.v1.admin",
 		"com.boot.swlugweb.v1.board",
 		"com.boot.swlugweb.v1.email",
-		"com.boot.swlugweb.v1.notice",
 		"com.boot.swlugweb.v1.main",
 		"com.boot.swlugweb.v1.mypage",
 		"com.boot.swlugweb.v1.password",
-		"com.boot.swlugweb.v1.blog"
+		"com.boot.swlugweb.v1.blog",
+		"com.boot.swlugweb.v1.notice"
 }) // MongoDB 레포지토리 경로 설정
+
 @EnableJpaRepositories(basePackages = {
 		"com.boot.swlugweb.v1.login",
 		"com.boot.swlugweb.v1.signup",
 		"com.boot.swlugweb.v1.admin",
 		"com.boot.swlugweb.v1.board",
 		"com.boot.swlugweb.v1.email",
-		"com.boot.swlugweb.v1.notice",
 		"com.boot.swlugweb.v1.main",
 		"com.boot.swlugweb.v1.mypage",
 		"com.boot.swlugweb.v1.password",
-		"com.boot.swlugweb.v1.blog"
-
-
+		"com.boot.swlugweb.v1.blog",
+		"com.boot.swlugweb.v1.notice"
 }) // JPA 레포지토리 경로 설정
+
 @EntityScan(basePackages = {
 		"com.boot.swlugweb.v1.login",
 		"com.boot.swlugweb.v1.signup",
 		"com.boot.swlugweb.v1.admin",
 		"com.boot.swlugweb.v1.board",
 		"com.boot.swlugweb.v1.email",
-
 		"com.boot.swlugweb.v1.notice",
 		"com.boot.swlugweb.v1.main",
 		"com.boot.swlugweb.v1.mypage",
