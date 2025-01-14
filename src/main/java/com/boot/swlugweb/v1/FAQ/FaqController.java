@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FaqController {
 
-    @GetMapping("api/faq")
+    @GetMapping("/api/faq")
     public Integer faq() {
         return 0;
     }
