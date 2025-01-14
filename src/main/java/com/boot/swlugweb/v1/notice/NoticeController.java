@@ -1,9 +1,9 @@
 package com.boot.swlugweb.v1.notice;
 
-import com.boot.swlugweb.v1.blog.BlogDomain;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,7 +55,35 @@ public class NoticeController {
 
         noticeService.createNotice(noticeCreateDto, userId);
         return ResponseEntity.ok().body("{\"redirect\": \"/api/notice\"}");
+    }
 
+    @PostMapping("/update")
+    public ResponseEntity<String> updateNoticePost(
+            @RequestBody NoticeUpdateRequestDto noticeUpdateRequestDto,
+            HttpSession session
+    ) {
+        String userId = (String) session.getAttribute("USER");
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        noticeService.updateNotice(noticeUpdateRequestDto, userId);
+        return ResponseEntity.ok().body("{\"redirect\": \"/api/notice\"}");
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<String> deleteNoticePost(
+            @RequestBody Map<String, String> request,
+            HttpSession session
+    ) {
+        String id = request.get("id");
+        String userId = (String) session.getAttribute("USER");
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        noticeService.deleteNotice(id, userId);
+        return ResponseEntity.ok().body("{\"redirect\": \"/api/notice\"}");
     }
 
 }
