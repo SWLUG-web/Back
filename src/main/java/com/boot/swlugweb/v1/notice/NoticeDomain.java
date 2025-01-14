@@ -26,13 +26,13 @@ public class NoticeDomain {
     private String userId;
 
     @Field("board_category")
-    private String boardCategory;
+    private Integer boardCategory;
 
     @Field("board_title")
-    private String boardTitle;
+    private String noticeTitle;
 
     @Field("board_contents")
-    private String boardContents;
+    private String noticeContents;
 
     @Field("created_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") // JSON 직렬화 시 포맷 지정

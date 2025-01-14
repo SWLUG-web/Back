@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/blog")
+@RequestMapping("/api/blog")
 public class BlogController {
 
     private final BlogService blogService;
@@ -39,8 +40,10 @@ public class BlogController {
         return ResponseEntity.ok(blogList).getBody();
     }
 
-    @GetMapping("/detail/{id}")
-    public ResponseEntity<BlogDomain> getBlogDetail(@PathVariable String id) {
+    @PostMapping("/detail")
+    public ResponseEntity<BlogDomain> getBlogDetail(@RequestBody Map<String, String> request) {
+        String id = request.get("id");
+
         BlogDomain blog = blogService.getBlogDetail(id);
         return ResponseEntity.ok(blog);
     }
@@ -54,7 +57,7 @@ public class BlogController {
         }
 
         blogService.createBlog(blogCreateDto, userId);
-        return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
+        return ResponseEntity.ok().body("{\"redirect\": \"/api/blog\"}");
     }
 
     @PostMapping("/update")
