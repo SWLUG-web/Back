@@ -15,7 +15,5 @@ public class BlogUpdateRequestDto {
     private String boardTitle;
     private String boardContent;
     private List<String> tag;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private List<String> imageUrl;
 }
