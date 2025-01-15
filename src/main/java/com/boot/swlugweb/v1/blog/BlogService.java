@@ -1,10 +1,12 @@
 package com.boot.swlugweb.v1.blog;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -101,4 +103,40 @@ public class BlogService {
         // 3. 데이터 삭제
         blogDetailRepository.deleteById(id);
     }
+
+    //태그 검색
+    public List<BlogDomain> searchBlogsByTag(String tag, int page) {
+        // 태그 값이 없으면 예외 발생
+        if (tag == null || tag.trim().isEmpty()) {
+            throw new IllegalArgumentException("Tag cannot be null or empty");
+        }
+
+        // 페이지 번호 검증
+        if (page < 0) {
+            throw new IllegalArgumentException("Page number cannot be negative");
+        }
+
+        // 페이지네이션 적용
+        Pageable pageable = PageRequest.of(page, 5);
+
+        // 태그 검색
+        List<BlogDomain> results = blogRepository.findByTag(tag, pageable);
+
+        // 결과가 없을 경우 빈 리스트 반환
+        return results.isEmpty() ? Collections.emptyList() : results;
+    }
+
+    // 카테고리 검색
+    public List<BlogDomain> searchBlogsByCategory(int category, int page) {
+        if (category < 0) {
+            throw new IllegalArgumentException("Category must be non-negative");
+        }
+        if (page < 0) {
+            throw new IllegalArgumentException("Page number cannot be negative");
+        }
+        Pageable pageable = PageRequest.of(page, 5);
+        List<BlogDomain> results = blogRepository.findByCategory(category, pageable);
+        return results.isEmpty() ? Collections.emptyList() : results;
+    }
+
 }
