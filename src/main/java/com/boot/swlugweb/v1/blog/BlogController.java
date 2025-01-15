@@ -2,10 +2,12 @@ package com.boot.swlugweb.v1.blog;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Map;
 
@@ -86,5 +88,33 @@ public class BlogController {
 
         blogService.deleteBlog(blogDeleteRequestDto, userId);
         return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
+    }
+
+    // 태그 검색
+    @GetMapping("/tagSearch")
+    public ResponseEntity<List<BlogDomain>> searchBlogsByTag(
+            @RequestParam String tag,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        try {
+            List<BlogDomain> blogs = blogService.searchBlogsByTag(tag, page);
+            return ResponseEntity.ok(blogs);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null); // 잘못된 입력 처리
+        }
+    }
+
+    // 카테고리 검색
+    @GetMapping("/category")
+    public ResponseEntity<List<BlogDomain>> searchBlogsByCategory(
+            @RequestParam int category,
+            @RequestParam(defaultValue = "0") int page
+    ) {
+        try {
+            List<BlogDomain> blogs = blogService.searchBlogsByCategory(category, page);
+            return ResponseEntity.ok(blogs);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
     }
 }
