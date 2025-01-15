@@ -91,7 +91,7 @@ public class BlogController {
     }
 
     // 태그 검색
-    @GetMapping("/search")
+    @GetMapping("/tagSearch")
     public ResponseEntity<List<BlogDomain>> searchBlogsByTag(
             @RequestParam String tag,
             @RequestParam(defaultValue = "0") int page
