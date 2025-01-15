@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/signup")
+@RequestMapping("/api/signup")
 public class SignupController {
 
     @Autowired
