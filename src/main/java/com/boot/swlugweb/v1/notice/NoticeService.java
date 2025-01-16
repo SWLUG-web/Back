@@ -1,7 +1,5 @@
 package com.boot.swlugweb.v1.notice;
 
-import com.boot.swlugweb.v1.blog.BlogDetailRepository;
-import com.boot.swlugweb.v1.blog.BlogDomain;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

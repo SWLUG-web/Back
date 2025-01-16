@@ -15,6 +15,7 @@ import java.util.Map;
 @RequestMapping("/api/blog")
 public class BlogController {
 
+    @Autowired
     private final BlogService blogService;
 
     public BlogController(BlogService blogService) {
@@ -22,24 +23,18 @@ public class BlogController {
     }
 
     @GetMapping
-    public List<BlogDto> getBlogs() {
-
-        List<BlogDto> blogList = blogService.getBlogs();
-
-        return ResponseEntity.ok(blogList).getBody();
-    }
-
-    @GetMapping("/{page}")
-    public List<BlogDto> getBlogsByPage(@PathVariable int page) {
-        // page가 0보다 작으면 0으로 설정
-        if (page < 0) {
-            page = 0;
-        } else {
-            page = page - 1;
+    public ResponseEntity<List<BlogDto>> getBlogs(@RequestParam(defaultValue = "1", required = false) int page) {
+        if (page < 1) {
+            page = 1;
         }
-        List<BlogDto> blogList = blogService.getBlogs(page);
+        int zeroBasedPage = page - 1;
+        List<BlogDto> blogList = blogService.getBlogs(zeroBasedPage);
 
-        return ResponseEntity.ok(blogList).getBody();
+        if (blogList == null || blogList.isEmpty()) {
+            return ResponseEntity.noContent().build(); // 데이터가 없으면 204 No Content
+        }
+
+        return ResponseEntity.ok(blogList);
     }
 
     @PostMapping("/detail")

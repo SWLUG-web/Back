@@ -13,9 +13,6 @@ public interface BlogRepository extends MongoRepository<BlogDomain, String> {
     @Query(value = "{ 'boardCategory' : { $ne : 0 } }" )
     List<BlogDto> findByBoardCategory(Pageable pageable);
 
-    @Query(value = "{ 'boardCategory' : { $ne : 0 } }" )
-    List<BlogDto> findByBoard();
-
     @Query("{ 'tag': { $regex: ?0, $options: 'i' } }")
     List<BlogDomain> findByTag(String tag, Pageable pageable);
 
