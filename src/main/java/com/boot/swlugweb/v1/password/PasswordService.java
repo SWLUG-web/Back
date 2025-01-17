@@ -5,7 +5,7 @@ import com.boot.swlugweb.v1.signup.SignupUsersDomain;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-//비밀번호
+//비밀번호 수정
 @Service
 public class PasswordService {
     private final PasswordRepository passwordRepository;
