@@ -1,5 +1,5 @@
 package com.boot.swlugweb.v1.login;
-
+//로그인
 public class LoginResponseDto {
     private final boolean success;
     private final String message;

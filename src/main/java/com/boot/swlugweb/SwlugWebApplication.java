@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+//수정
 @SpringBootApplication
 @EnableMongoRepositories(basePackages = {
 		"com.boot.swlugweb.v1.login",

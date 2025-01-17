@@ -3,7 +3,7 @@ package com.boot.swlugweb.v1.password;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
-
+//비밀번호
 @Getter
 @Setter
 public class PasswordUpdateDto {

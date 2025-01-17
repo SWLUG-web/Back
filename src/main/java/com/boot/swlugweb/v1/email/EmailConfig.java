@@ -13,6 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.util.Properties;
 
+//이메일
 // 사용자 이메일로 인증 번호 담긴 메일을 보내기 위한 설정 진행
 @Configuration
 public class EmailConfig {

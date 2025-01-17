@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @Table(name="user_type")
 public class SignupUserRuleTypeDomain {
-
+    //회원가입
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "type_num")

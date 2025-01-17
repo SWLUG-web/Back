@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SignupConfig {
-
+//회원가입
     @Bean
     public PasswordEncoder passwordEncoder() { //비밀번호 암호화
         return new BCryptPasswordEncoder();

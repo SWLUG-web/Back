@@ -2,7 +2,7 @@ package com.boot.swlugweb.v1.signup;
 
 import lombok.Getter;
 import lombok.Setter;
-
+//회원가입
 @Getter
 @Setter
 public class SignupRequestDto {

@@ -15,7 +15,7 @@ import java.util.Random;
 
 @Service
 public class EmailService {
-
+    //이메일
     @Autowired
     private JavaMailSender mailSender;
     private int authNumber;

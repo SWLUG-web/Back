@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/login")
+@RequestMapping("/api/login")  //수정
 public class LoginController {
     private final LoginService loginService;
 
