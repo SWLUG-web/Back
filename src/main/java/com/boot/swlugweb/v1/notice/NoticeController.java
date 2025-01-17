@@ -3,7 +3,6 @@ package com.boot.swlugweb.v1.notice;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public class NoticeController {
     private NoticeService noticeService;
 
     @GetMapping
-    public ResponseEntity<List<NoticeDto>> getNoticeById(@RequestParam(defaultValue = "1", required = false) int page) {
+    public ResponseEntity<List<NoticeDto>> getNotice(@RequestParam(defaultValue = "1", required = false) int page) {
         if (page < 1) {
             page = 1;
         }

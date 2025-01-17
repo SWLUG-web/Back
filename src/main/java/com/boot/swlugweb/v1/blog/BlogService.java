@@ -1,6 +1,5 @@
 package com.boot.swlugweb.v1.blog;
 
-import jakarta.transaction.Transactional;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,15 +12,8 @@ import java.util.List;
 public class BlogService {
 
     private final BlogRepository blogRepository;
-    private final BlogDetailRepository blogDetailRepository;
-
-    public BlogService(BlogRepository blogRepository, BlogDetailRepository blogDetailRepository) {
+    public BlogService(BlogRepository blogRepository) {
         this.blogRepository = blogRepository;
-        this.blogDetailRepository = blogDetailRepository;
-    }
-
-    public List<BlogDto> getBlogs() {
-        return blogRepository.findByBoard();
     }
 
     // 게시물 간단 조회
@@ -32,7 +24,7 @@ public class BlogService {
 
     // 게시물 상세 조회
     public BlogDomain getBlogDetail(String id) {
-        return blogDetailRepository.findById(id)
+        return blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(id+" Blog post not found"));
     }
 
@@ -52,7 +44,7 @@ public class BlogService {
         blogDomain.setIsDelete(0);
 
         // MongoDB에 저장
-        return blogDetailRepository.save(blogDomain);
+        return blogRepository.save(blogDomain);
     }
 
     // 게시물 수정
@@ -84,7 +76,7 @@ public class BlogService {
         blog.setCreateAt(LocalDateTime.now());
 
         // 저장
-        blogDetailRepository.save(blog);
+        blogRepository.save(blog);
     }
 
     // blog 삭제
@@ -92,7 +84,7 @@ public class BlogService {
         // 1. ID로 해당 블로그 조회
         String id = blogDeleteRequestDto.getId();
 
-        BlogDomain blog = blogDetailRepository.findById(id)
+        BlogDomain blog = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Blog post not found: " + id));
 
         // 2. 작성자(userId) 확인
@@ -101,7 +93,7 @@ public class BlogService {
         }
 
         // 3. 데이터 삭제
-        blogDetailRepository.deleteById(id);
+        blogRepository.deleteById(id);
     }
 
     //태그 검색
