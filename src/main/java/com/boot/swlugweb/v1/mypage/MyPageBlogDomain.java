@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "SwlugWeb")
+@Document(collection = "SwlugWebTest")
 @Getter
 @Setter
 public class MyPageBlogDomain {
