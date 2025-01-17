@@ -1,5 +1,5 @@
 package com.boot.swlugweb.v1.login;
-//로그인
+//로그인수정
 //userId와 password
 public class LoginRequestDto {
     private String userId;

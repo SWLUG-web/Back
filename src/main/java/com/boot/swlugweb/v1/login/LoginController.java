@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-
+//로그인 수정
 @RestController
 @RequestMapping("/api/login")  //수정
 public class LoginController {

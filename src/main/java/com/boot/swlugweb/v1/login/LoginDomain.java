@@ -5,7 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import java.time.LocalDateTime;
-//로그인
+//로그인 수정
 @Entity
 @Table(name = "users") //DB 테이블 이름
 public class LoginDomain {

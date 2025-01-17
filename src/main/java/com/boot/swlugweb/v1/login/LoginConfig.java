@@ -13,7 +13,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 @EnableWebSecurity
 public class LoginConfig {
 
-    //로그인
+    //로그인 수정
     @Bean
     public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
         http
