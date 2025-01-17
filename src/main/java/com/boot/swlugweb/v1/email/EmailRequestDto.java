@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
-//이메일
+//이메일 수정
 @Getter
 @Setter
 //사용자 이메일 받아올 DTO
