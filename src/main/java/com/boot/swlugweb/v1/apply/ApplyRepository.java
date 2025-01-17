@@ -1,4 +1,4 @@
 package com.boot.swlugweb.v1.apply;
-//apply
+//회원가입
 public class ApplyRepository {
 }
