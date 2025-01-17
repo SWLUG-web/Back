@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-//이메일
+//이메일 수정
 @Getter
 @Setter
 public class EmailCheckDto {
