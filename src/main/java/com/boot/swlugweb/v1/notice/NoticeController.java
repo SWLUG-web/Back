@@ -11,19 +11,17 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/notice")
 public class NoticeController {
-
     @Autowired
     private NoticeService noticeService;
 
     @GetMapping
-    public ResponseEntity<List<NoticeDto>> getNotice() {  // page 파라미터 제거
-        List<NoticeDto> noticeList = noticeService.getNotices();
-
-        if (noticeList == null || noticeList.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
-        return ResponseEntity.ok(noticeList);
+    public ResponseEntity<NoticePageResponse> getNotices(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String searchTerm,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        NoticePageResponse response = noticeService.getNoticesWithPagination(page, searchTerm, size);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/detail")
@@ -79,6 +77,13 @@ public class NoticeController {
 
         noticeService.deleteNotice(id, userId);
         return ResponseEntity.ok().body("{\"redirect\": \"/api/notice\"}");
+    }
+
+    @PostMapping("/adjacent")
+    public ResponseEntity<Map<String, NoticeSummaryDto>> getAdjacentNotices(@RequestBody Map<String, String> request) {
+        String id = request.get("id");
+        Map<String, NoticeSummaryDto> adjacentNotices = noticeService.getAdjacentNotices(id);
+        return ResponseEntity.ok(adjacentNotices);
     }
 
 }
