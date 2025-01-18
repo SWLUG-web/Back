@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface NoticeRepository extends MongoRepository<NoticeDomain, String> {
-    @Query(value = "{ 'board_category' : 0 }")
+    @Query(value = "{ 'board_category' : 0 }", sort = "{ 'created_at' : -1 }")
     List<NoticeDto> findByNoticeDto(Pageable pageable);
 }
