@@ -17,14 +17,6 @@ public class MyPageService {
 
     @Transactional(readOnly = true)
     public MyPageResponseDto getUserInfo(String userId) {
-//        return myPageRepository.findByUserId(userId)
-//                .map(userInfo -> new MyPageResponseDto(
-//                        userInfo.getSignupUsers().getUserId(),
-//                        userInfo.getSignupUserRuleType().getNickname(),
-//                        userInfo.getPhone(),
-//                        userInfo.getEmail()
-//                ))
-//                .orElseThrow(() -> new RuntimeException("사용자 정보를 찾을 수 없습니다."));
 
         MyPageResponseDto userInfo = myPageRepository.findByUserId(userId)
                 .map(user -> new MyPageResponseDto(

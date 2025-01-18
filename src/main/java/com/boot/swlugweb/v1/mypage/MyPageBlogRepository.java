@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface MyPageBlogRepository extends MongoRepository<MyPageBlogDomain, String> {
-    @Query(value = "{ 'user_id': ?0 }")
+    @Query(value = "{ 'user_id': ?0 }", sort = "{ 'created_at': -1 }")
     List<MyPageBlogDomain> findByUserId(@Param("userId") String userId);
 }
