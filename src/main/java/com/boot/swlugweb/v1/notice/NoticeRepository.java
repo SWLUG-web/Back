@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface NoticeRepository extends MongoRepository<NoticeDomain, String> {
     @Query(value = "{ 'board_category' : 0 }")
-    List<NoticeDto> findByNoticeDto(Pageable pageable);
+    List<NoticeDto> findByNoticeDto();  // Pageable 파라미터 제거
 }

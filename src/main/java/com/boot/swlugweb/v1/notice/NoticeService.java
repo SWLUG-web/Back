@@ -16,12 +16,10 @@ public class NoticeService {
         this.noticeRepository = noticeRepository;
     }
 
-    // 공지사항 간단 조회
-    public List<NoticeDto> getNotices(int page) {
-        Pageable pageable = PageRequest.of(page, 5);
-        return noticeRepository.findByNoticeDto(pageable);
+    // 공지사항 간단 조회 - 페이지네이션 제거
+    public List<NoticeDto> getNotices() {  // page 파라미터 제거
+        return noticeRepository.findByNoticeDto();  // Pageable 관련 코드 제거
     }
-
     // 공지사항 상세 조회
     public NoticeDomain getNoticeDetail(String id) {
         return noticeRepository.findById(id)

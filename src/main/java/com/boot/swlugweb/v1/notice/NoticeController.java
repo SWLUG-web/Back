@@ -16,15 +16,11 @@ public class NoticeController {
     private NoticeService noticeService;
 
     @GetMapping
-    public ResponseEntity<List<NoticeDto>> getNotice(@RequestParam(defaultValue = "1", required = false) int page) {
-        if (page < 1) {
-            page = 1;
-        }
-        int zeroBasedPage = page - 1;
-        List<NoticeDto> noticeList = noticeService.getNotices(zeroBasedPage);
+    public ResponseEntity<List<NoticeDto>> getNotice() {  // page 파라미터 제거
+        List<NoticeDto> noticeList = noticeService.getNotices();
 
         if (noticeList == null || noticeList.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 데이터가 없으면 204 No Content
+            return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity.ok(noticeList);
