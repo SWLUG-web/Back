@@ -10,12 +10,12 @@ import java.util.List;
 
 @Repository
 public interface BlogRepository extends MongoRepository<BlogDomain, String> {
-    @Query(value = "{ 'boardCategory' : { $ne : 0 } }" )
+    @Query(value = "{ 'boardCategory' : { $ne : 0 } }", sort = "{ 'created_at' : -1 }" )
     List<BlogDto> findByBoardCategory(Pageable pageable);
 
-    @Query("{ 'tag': { $regex: ?0, $options: 'i' } }")
+    @Query(value = "{ 'tag': { $regex: ?0, $options: 'i' } }", sort = "{ 'created_at' : -1 }")
     List<BlogDomain> findByTag(String tag, Pageable pageable);
 
-    @Query("{ 'boardCategory': ?0 }")
+    @Query(value = "{ 'boardCategory': ?0 }", sort = "{ 'created_at' : -1 }")
     List<BlogDomain> findByCategory(int category, Pageable pageable);
 }
