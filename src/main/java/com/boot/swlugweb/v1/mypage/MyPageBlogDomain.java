@@ -24,7 +24,7 @@ public class MyPageBlogDomain {
     @Field("board_title")
     private String boardTitle;
 
-    @Field("create_at")
+    @Field("created_at")
     private LocalDateTime createAt;
 
     @Field("is_pin")
