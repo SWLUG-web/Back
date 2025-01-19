@@ -23,18 +23,13 @@ public class BlogController {
     }
 
     @GetMapping
-    public ResponseEntity<List<BlogDto>> getBlogs(@RequestParam(defaultValue = "1", required = false) int page) {
-        if (page < 1) {
-            page = 1;
-        }
-        int zeroBasedPage = page - 1;
-        List<BlogDto> blogList = blogService.getBlogs(zeroBasedPage);
-
-        if (blogList == null || blogList.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 데이터가 없으면 204 No Content
-        }
-
-        return ResponseEntity.ok(blogList);
+    public ResponseEntity<BlogPageResponse> getBlogs(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String searchTerm,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        BlogPageResponse response = blogService.getBlogsWithPaginationg(page, searchTerm, size);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/detail")
@@ -111,5 +106,12 @@ public class BlogController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(null);
         }
+    }
+
+    @PostMapping("/adjacent")
+    public ResponseEntity<Map<String, BlogSummaryDto>> searchBlogsByAdjacent(@RequestBody Map<String, String> request) {
+        String id = request.get("id");
+        Map<String, BlogSummaryDto> adjacentBlogs = blogService.getAdjacentBlogs(id);
+        return ResponseEntity.ok(adjacentBlogs);
     }
 }

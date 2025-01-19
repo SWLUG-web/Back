@@ -2,6 +2,7 @@ package com.boot.swlugweb.v1.blog;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,4 +18,11 @@ public class BlogDto {
 
     private List<String> tag;
     private List<String> imageUrl;
+
+    private Boolean isPin = false;
+    private Integer isSecure = 0;
+    private Integer isDelete = 0;
+
+    // 추가된 필드
+    private Long displayNumber;
 }

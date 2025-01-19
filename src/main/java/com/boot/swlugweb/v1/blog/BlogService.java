@@ -1,31 +1,79 @@
 package com.boot.swlugweb.v1.blog;
 
+import com.boot.swlugweb.v1.notice.NoticeDomain;
+import com.boot.swlugweb.v1.notice.NoticeSummaryDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BlogService {
 
     private final BlogRepository blogRepository;
+
     public BlogService(BlogRepository blogRepository) {
         this.blogRepository = blogRepository;
     }
 
-    // 게시물 간단 조회
-    public List<BlogDto> getBlogs(int page) {
-        Pageable pageable = PageRequest.of(page, 5);
-        return blogRepository.findByBoardCategory(pageable);
+    public BlogPageResponse getBlogsWithPaginationg(int page, String searchTerm, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<BlogDto> blogPage;
+        long totalBlogs = blogRepository.countByBlogCategoryAndIsDelete(0);
+
+        if (searchTerm != null && !searchTerm.isEmpty()) {
+            blogPage = blogRepository.findByBlogIsDeleteOrderByIsPinDescCreateAtDesc(0, pageable);
+        } else {
+            try {
+                String decodedSearchTerm = java.net.URLDecoder.decode(searchTerm, "UTF-8");
+                String regexPattern = ".*" + decodedSearchTerm.trim()
+                        .replaceAll("[\\s]+", " ")
+                        .replaceAll(" ", "(?:[ ]|)") + ".*";
+
+                blogPage = blogRepository.findByBlogTitleContainingAndIsDelete(
+                        regexPattern, 0, pageable
+                );
+            } catch (Exception e) {
+                throw new RuntimeException("검색어 처리 중 오류가 발생했습니다.", e);
+            }
+        }
+
+        // 번호 부여
+        List<BlogDto> blogsWithNumbers = blogPage.getContent().stream()
+                .map(blog -> {
+                    // 현제 게시글보다 최신인 게시글 수를 한 번에 조회
+                    long olderCount = blogRepository.countOlderBlogs(0, blog.getCreateAt());
+                    blog.setDisplayNumber(totalBlogs - olderCount);
+                    return blog;
+                })
+                .collect(Collectors.toList());
+
+        return new BlogPageResponse(
+                blogsWithNumbers,
+                blogPage.getTotalElements(),
+                blogPage.getTotalPages(),
+                page
+        );
     }
 
     // 게시물 상세 조회
     public BlogDomain getBlogDetail(String id) {
-        return blogRepository.findById(id)
+        BlogDomain blog = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(id+" Blog post not found"));
+
+        // 카테고리가 0이면 예외 발생
+        if (blog.getBoardCategory() == 0) {
+            throw new IllegalArgumentException("Invalid blog category");
+        }
+
+        return blog;
     }
 
     // 게시물 저장
@@ -94,6 +142,39 @@ public class BlogService {
 
         // 3. 데이터 삭제
         blogRepository.deleteById(id);
+    }
+
+    public Map<String, BlogSummaryDto> getAdjacentBlogs(String id) {
+        Map<String, BlogSummaryDto> result = new HashMap<>();
+
+        BlogDomain currentBlog = blogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException(id + " 게시물이 없습니다."));
+        LocalDateTime currentCreateAt = currentBlog.getCreateAt();
+
+        List<BlogDomain> prevBlogs = blogRepository.findPrevBlogs(currentCreateAt);
+        if (!prevBlogs.isEmpty()) {
+            BlogDomain prevBlog = prevBlogs.stream()
+                    .min((a, b) -> a.getCreateAt().compareTo(b.getCreateAt()))
+                    .get();
+            BlogSummaryDto prevDto = new BlogSummaryDto();
+            prevDto.setId(prevBlog.getId());
+            prevDto.setBlogTitle(prevBlog.getBoardTitle());
+            result.put("previous", prevDto);
+        }
+
+        List<BlogDomain> nextBlogs = blogRepository.findNextBlogs(currentCreateAt);
+        if (!nextBlogs.isEmpty()) {
+            BlogDomain nextBlog = nextBlogs.stream()
+                    .max((a, b) -> a.getCreateAt().compareTo(b.getCreateAt()))
+                    .get();
+            BlogSummaryDto nextDto = new BlogSummaryDto();
+            nextDto.setId(nextBlog.getId());
+            nextDto.setBlogTitle(nextBlog.getBoardTitle());
+            result.put("next", nextDto);
+        }
+
+        return result;
+
     }
 
     //태그 검색
