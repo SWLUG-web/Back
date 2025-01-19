@@ -56,11 +56,6 @@ public class NoticeService {
                 noticePage.getTotalPages(),
                 page
         );
-    // 공지사항 간단 조회
-    public List<NoticeDto> getNotices(int page) {
-        Pageable pageable = PageRequest.of(page, 10);
-
-        return noticeRepository.findByNoticeDto(pageable);
     }
 
     // 공지사항 상세 조회 - 카테고리 체크 추가
@@ -157,3 +152,4 @@ public class NoticeService {
         return result;
     }
 }
+
