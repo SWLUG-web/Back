@@ -1,7 +1,5 @@
 package com.boot.swlugweb.v1.blog;
 
-import com.boot.swlugweb.v1.notice.NoticeDomain;
-import com.boot.swlugweb.v1.notice.NoticeSummaryDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -111,6 +109,9 @@ public class BlogService {
         // 필드 업데이트
         if (blogUpdateRequestDto.getBoardTitle() != null) {
             blog.setBoardTitle(blogUpdateRequestDto.getBoardTitle());
+        }
+        if (blogUpdateRequestDto.getBoardContent() != null) {
+            blog.setBoardCategory(blogUpdateRequestDto.getBoardCategory());
         }
         if (blogUpdateRequestDto.getBoardContent() != null) {
             blog.setBoardContents(blogUpdateRequestDto.getBoardContent());
