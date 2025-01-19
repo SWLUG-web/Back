@@ -1,7 +1,5 @@
 package com.boot.swlugweb.v1.blog;
 
-import com.boot.swlugweb.v1.notice.NoticeDomain;
-import com.boot.swlugweb.v1.notice.NoticeDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
