@@ -11,23 +11,17 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/notice")
 public class NoticeController {
-
     @Autowired
     private NoticeService noticeService;
 
     @GetMapping
-    public ResponseEntity<List<NoticeDto>> getNotice(@RequestParam(defaultValue = "1", required = false) int page) {
-        if (page < 1) {
-            page = 1;
-        }
-        int zeroBasedPage = page - 1;
-        List<NoticeDto> noticeList = noticeService.getNotices(zeroBasedPage);
-
-        if (noticeList == null || noticeList.isEmpty()) {
-            return ResponseEntity.noContent().build(); // 데이터가 없으면 204 No Content
-        }
-
-        return ResponseEntity.ok(noticeList);
+    public ResponseEntity<NoticePageResponse> getNotices(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String searchTerm,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        NoticePageResponse response = noticeService.getNoticesWithPagination(page, searchTerm, size);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/detail")
@@ -83,6 +77,13 @@ public class NoticeController {
 
         noticeService.deleteNotice(id, userId);
         return ResponseEntity.ok().body("{\"redirect\": \"/api/notice\"}");
+    }
+
+    @PostMapping("/adjacent")
+    public ResponseEntity<Map<String, NoticeSummaryDto>> getAdjacentNotices(@RequestBody Map<String, String> request) {
+        String id = request.get("id");
+        Map<String, NoticeSummaryDto> adjacentNotices = noticeService.getAdjacentNotices(id);
+        return ResponseEntity.ok(adjacentNotices);
     }
 
 }

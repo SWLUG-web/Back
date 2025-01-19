@@ -23,7 +23,7 @@ public class NoticeDto {
     private String boardTitle;
 
     @Field("created_at")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") // JSON 직렬화 시 포맷 지정
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createAt;
 
     @Field("tag")
@@ -37,4 +37,7 @@ public class NoticeDto {
 
     @Field("is_delete")
     private Integer isDelete = 0;
+
+    // 추가된 필드
+    private Long displayNumber;
 }
