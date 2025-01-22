@@ -2,6 +2,8 @@ package com.boot.swlugweb.v1.blog;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,8 +47,16 @@ public class BlogController {
             return ResponseEntity.status(401).build();
         }
 
-        blogService.createBlog(blogCreateDto, userId);
-        return ResponseEntity.ok().body("{\"redirect\": \"/api/blog\"}");
+        try {
+            blogService.createBlog(blogCreateDto, userId);
+
+            return ResponseEntity.status(302)
+                    .header(HttpHeaders.LOCATION,"/api/blog")
+                    .build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
     }
 
     @PostMapping("/update")
@@ -59,8 +69,15 @@ public class BlogController {
             return ResponseEntity.status(401).build();
         }
 
-        blogService.updateBlog(blogUpdateRequestDto, userId);
-        return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
+        try {
+            blogService.updateBlog(blogUpdateRequestDto, userId);
+
+            return ResponseEntity.status(302)
+                    .header(HttpHeaders.LOCATION,"/api/blog")
+                    .build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping("/delete")
@@ -73,8 +90,15 @@ public class BlogController {
             return ResponseEntity.status(401).build();
         }
 
-        blogService.deleteBlog(blogDeleteRequestDto, userId);
-        return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
+        try {
+            blogService.deleteBlog(blogDeleteRequestDto, userId);
+//            return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
+            return ResponseEntity.status(302)
+                    .header(HttpHeaders.LOCATION,"/api/blog")
+                    .build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     // 태그 검색
