@@ -1,10 +1,14 @@
 package com.boot.swlugweb.v1.blog;
 
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +19,14 @@ public class BlogController {
     @Autowired
     private final BlogService blogService;
 
-    public BlogController(BlogService blogService) {
+    private static final String APPLICATION_NAME = "Google Drive API Java Quickstart";
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private final GoogleDriveService googleDriveService;
+
+
+    public BlogController(BlogService blogService, GoogleDriveService googleDriveService) {
         this.blogService = blogService;
+        this.googleDriveService = googleDriveService;
     }
 
     @GetMapping
@@ -29,17 +39,26 @@ public class BlogController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/detail")
-    public ResponseEntity<BlogDomain> getBlogDetail(@RequestBody Map<String, String> request) {
-        String id = request.get("id");
+//    @PostMapping("/detail")
+//    public ResponseEntity<BlogDomain> getBlogDetail(@RequestBody Map<String, String> request) {
+//        String id = request.get("id");
+//
+//        BlogDomain blog = blogService.getBlogDetail(id);
+//        return ResponseEntity.ok(blog);
+//    }
 
-        BlogDomain blog = blogService.getBlogDetail(id);
-        return ResponseEntity.ok(blog);
-    }
+//    @PostMapping("/detail")
+//    public ResponseEntity<BlogDto> getBlogDetail(@RequestBody Map<String, String> request) {
+//        String id = request.get("id");
+//
+//        BlogDto blog = blogService.getBlogDetail(id);
+//        return ResponseEntity.ok(blog);
+//    }
+
 
     @PostMapping("/save")
     public ResponseEntity<?> saveBlog(@RequestBody BlogCreateDto blogCreateDto,
-                                 HttpSession session) {
+                                 HttpSession session) throws GeneralSecurityException , IOException {
         String userId = (String) session.getAttribute("USER");
         if (userId == null) {
             return ResponseEntity.status(401).build();
@@ -53,7 +72,7 @@ public class BlogController {
     public ResponseEntity<String> updateBlogPost(
             @RequestBody BlogUpdateRequestDto blogUpdateRequestDto,
             HttpSession session
-    ) {
+    ) throws GeneralSecurityException, IOException {
         String userId = (String) session.getAttribute("USER");
         if (userId == null) {
             return ResponseEntity.status(401).build();
@@ -111,4 +130,15 @@ public class BlogController {
         Map<String, BlogSummaryDto> adjacentBlogs = blogService.getAdjacentBlogs(id);
         return ResponseEntity.ok(adjacentBlogs);
     }
+
+//    @PostMapping("/upload-image")
+//    public ResponseEntity<?> uploadImage(@RequestParam("upload") MultipartFile imageFile) {
+//        try {
+//            String fileId = googleDriveService.uploadFile(imageFile);
+//            String fileUrl = "https://drive.google.com/uc?id=" + fileId;
+//            return ResponseEntity.ok(Map.of("uploaded", true, "url", fileUrl));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).body(Map.of("uploaded", false, "error", Map.of("message", e.getMessage())));
+//        }
+//    }
 }

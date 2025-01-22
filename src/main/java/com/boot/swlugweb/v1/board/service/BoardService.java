@@ -168,7 +168,7 @@ public class BoardService {
                 .createAt(board.getCreateAt())
                 .updateAt(board.getUpdateAt())
                 .contents(boardDetail.getBoardContents())
-                .imageUrl(boardDetail.getImage())
+                .imagePath(boardDetail.getImage())
                 .build();
     }
 
@@ -196,7 +196,7 @@ public class BoardService {
                             .createAt(board.getCreateAt())
                             .updateAt(board.getUpdateAt())
                             .contents(boardDetail.getBoardContents())
-                            .imageUrl(boardDetail.getImage())
+                            .imagePath(boardDetail.getImage())
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -237,7 +237,7 @@ public class BoardService {
                             .createAt(board.getCreateAt())
                             .updateAt(board.getUpdateAt())
                             .contents(boardDetail.getBoardContents())
-                            .imageUrl(boardDetail.getImage())
+                            .imagePath(boardDetail.getImage())
                             .build();
                 })
                 .collect(Collectors.toList());
@@ -280,7 +280,7 @@ public class BoardService {
                             .createAt(board.getCreateAt())
                             .updateAt(board.getUpdateAt())
                             .contents(boardDetail.getBoardContents())
-                            .imageUrl(boardDetail.getImage())
+                            .imagePath(boardDetail.getImage())
                             .build();
                 })
                 .collect(Collectors.toList());
