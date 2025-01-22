@@ -42,7 +42,7 @@ public class BlogDomain {
     private List<String> tag;
 
     @Field("image")
-    private List<String> image;
+    private List<String> imageUrls;
 
     @Field("is_pin")
     private Boolean isPin = false;

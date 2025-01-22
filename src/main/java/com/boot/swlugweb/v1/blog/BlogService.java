@@ -4,21 +4,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class BlogService {
 
     private final BlogRepository blogRepository;
+    private final GoogleDriveService googleDriveService;
 
-    public BlogService(BlogRepository blogRepository) {
+    public BlogService(BlogRepository blogRepository, GoogleDriveService googleDriveService) {
         this.blogRepository = blogRepository;
+        this.googleDriveService = googleDriveService;
     }
 
     public BlogPageResponse getBlogsWithPaginationg(int page, String searchTerm, int size) {
@@ -74,27 +76,97 @@ public class BlogService {
         return blog;
     }
 
-    // 게시물 저장
-    public BlogDomain createBlog(BlogCreateDto blogCreateDto, String userId) {
+//    // 게시물 저장
+//    public BlogDomain createBlog(BlogCreateDto blogCreateDto, String userId) {
+//        BlogDomain blogDomain = new BlogDomain();
+//
+//        blogDomain.setUserId(userId);
+//        blogDomain.setBoardCategory(blogCreateDto.getBoardCategory());
+//        blogDomain.setBoardTitle(blogCreateDto.getBoardTitle());
+//        blogDomain.setBoardContents(blogCreateDto.getBoardContent());
+//        blogDomain.setCreateAt(LocalDateTime.now());
+//        blogDomain.setTag(blogCreateDto.getTag());
+//        blogDomain.setImage(blogCreateDto.getImageUrl());
+//        blogDomain.setIsPin(false);
+//        blogDomain.setIsSecure(0);
+//        blogDomain.setIsDelete(0);
+//
+//        // MongoDB에 저장
+//        return blogRepository.save(blogDomain);
+//    }
+
+    public BlogDomain createBlog(BlogCreateDto blogCreateDto, String userId) throws GeneralSecurityException, IOException {
         BlogDomain blogDomain = new BlogDomain();
 
+        // 기본 필드 설정
         blogDomain.setUserId(userId);
         blogDomain.setBoardCategory(blogCreateDto.getBoardCategory());
         blogDomain.setBoardTitle(blogCreateDto.getBoardTitle());
         blogDomain.setBoardContents(blogCreateDto.getBoardContent());
         blogDomain.setCreateAt(LocalDateTime.now());
         blogDomain.setTag(blogCreateDto.getTag());
-        blogDomain.setImage(blogCreateDto.getImageUrl());
         blogDomain.setIsPin(false);
         blogDomain.setIsSecure(0);
         blogDomain.setIsDelete(0);
 
-        // MongoDB에 저장
+        // Google Drive 이미지 업로드
+        List<String> uploadedImageUrls = new ArrayList<>();
+        for (MultipartFile file : blogCreateDto.getImageFiles()) {
+            try {
+                String imageUrl = googleDriveService.uploadFile(file);
+                uploadedImageUrls.add(imageUrl);
+            } catch (Exception e) {
+                System.err.println("이미지 업로드 실패: " + file.getOriginalFilename());
+                e.printStackTrace();
+            }
+        }
+
+        blogDomain.setImageUrls(uploadedImageUrls);
+
+        // MongoDB 저장
         return blogRepository.save(blogDomain);
     }
 
+
+
+
     // 게시물 수정
-    public void updateBlog(BlogUpdateRequestDto blogUpdateRequestDto, String userId) {
+//    public void updateBlog(BlogUpdateRequestDto blogUpdateRequestDto, String userId) {
+//        // 기존 데이터 조회
+//        String id = blogUpdateRequestDto.getId();
+//
+//        BlogDomain blog = blogRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException(id + "게시물이 없습니다."));
+//
+//        // 작성자(userId) 확인
+//        if(!blog.getUserId().equals(userId)) {
+//            throw new SecurityException("작성자가 아닙니다.");
+//        }
+//
+//        // 필드 업데이트
+//        if (blogUpdateRequestDto.getBoardTitle() != null) {
+//            blog.setBoardTitle(blogUpdateRequestDto.getBoardTitle());
+//        }
+//        if (blogUpdateRequestDto.getBoardContent() != null) {
+//            blog.setBoardCategory(blogUpdateRequestDto.getBoardCategory());
+//        }
+//        if (blogUpdateRequestDto.getBoardContent() != null) {
+//            blog.setBoardContents(blogUpdateRequestDto.getBoardContent());
+//        }
+//        if (blogUpdateRequestDto.getTag() != null) {
+//            blog.setTag(blogUpdateRequestDto.getTag());
+//        }
+//        if (blogUpdateRequestDto.getImageUrl() != null) {
+//            blog.setImage(blogUpdateRequestDto.getImageUrl());
+//        }
+//        blog.setCreateAt(LocalDateTime.now());
+//
+//        // 저장
+//        blogRepository.save(blog);
+//    }
+
+    // 게시물 수정
+    public void updateBlog(BlogUpdateRequestDto blogUpdateRequestDto, String userId) throws GeneralSecurityException, IOException {
         // 기존 데이터 조회
         String id = blogUpdateRequestDto.getId();
 
@@ -111,24 +183,66 @@ public class BlogService {
             blog.setBoardTitle(blogUpdateRequestDto.getBoardTitle());
         }
         if (blogUpdateRequestDto.getBoardContent() != null) {
-            blog.setBoardCategory(blogUpdateRequestDto.getBoardCategory());
-        }
-        if (blogUpdateRequestDto.getBoardContent() != null) {
             blog.setBoardContents(blogUpdateRequestDto.getBoardContent());
         }
         if (blogUpdateRequestDto.getTag() != null) {
             blog.setTag(blogUpdateRequestDto.getTag());
         }
-        if (blogUpdateRequestDto.getImageUrl() != null) {
-            blog.setImage(blogUpdateRequestDto.getImageUrl());
+        // 기존 이미지 URL 목록
+        List<String> currentImageUrls = blog.getImageUrls() != null ? new ArrayList<>(blog.getImageUrls()) : new ArrayList<>();
+
+        // 유지하려는 이미지 URL 목록
+        List<String> updatedImageUrls = blogUpdateRequestDto.getImageUrls() != null ? blogUpdateRequestDto.getImageUrls() : new ArrayList<>();
+
+        // 삭제할 이미지 URL 계산
+        List<String> imagesToDelete = new ArrayList<>(currentImageUrls);
+        imagesToDelete.removeAll(updatedImageUrls);
+
+        // Google Drive에서 삭제
+        for (String imageUrl : imagesToDelete) {
+            String fileId = extractFileIdFromUrl(imageUrl);
+            googleDriveService.deleteFile(fileId);
         }
+        // 새로 업로드된 이미지 추가
+        if (blogUpdateRequestDto.getImageFiles() != null) {
+            for (MultipartFile file : blogUpdateRequestDto.getImageFiles()) {
+                String imageUrl = googleDriveService.uploadFile(file);
+                updatedImageUrls.add(imageUrl);
+            }
+        }
+
+        // 최종 이미지 목록 설정
+        blog.setImageUrls(updatedImageUrls);
         blog.setCreateAt(LocalDateTime.now());
 
         // 저장
         blogRepository.save(blog);
     }
 
-    // blog 삭제
+    private String extractFileIdFromUrl(String url) {
+        // Google Drive URL에서 파일 ID 추출
+        String[] parts = url.split("/");
+        return parts[parts.length - 2];
+    }
+
+
+//    // blog 삭제
+//    public void deleteBlog(BlogDeleteRequestDto blogDeleteRequestDto, String userId) {
+//        // 1. ID로 해당 블로그 조회
+//        String id = blogDeleteRequestDto.getId();
+//
+//        BlogDomain blog = blogRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Blog post not found: " + id));
+//
+//        // 2. 작성자(userId) 확인
+//        if (!blog.getUserId().equals(userId)) {
+//            throw new SecurityException("You are not authorized to delete this post.");
+//        }
+//
+//        // 3. 데이터 삭제
+//        blogRepository.deleteById(id);
+//    }
+
     public void deleteBlog(BlogDeleteRequestDto blogDeleteRequestDto, String userId) {
         // 1. ID로 해당 블로그 조회
         String id = blogDeleteRequestDto.getId();
@@ -141,9 +255,26 @@ public class BlogService {
             throw new SecurityException("You are not authorized to delete this post.");
         }
 
-        // 3. 데이터 삭제
+        // 3. Google Drive에서 이미지 삭제
+        List<String> imageUrls = blog.getImageUrls();
+        if (imageUrls != null && !imageUrls.isEmpty()) {
+            for (String imageUrl : imageUrls) {
+                try {
+                    // Google Drive URL에서 파일 ID 추출
+                    String fileId = extractFileIdFromUrl(imageUrl);
+                    googleDriveService.deleteFile(fileId); // Google Drive에서 파일 삭제
+                } catch (Exception e) {
+                    System.err.println("Failed to delete image: " + imageUrl);
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // 4. 데이터 삭제
         blogRepository.deleteById(id);
     }
+
+
 
     public Map<String, BlogSummaryDto> getAdjacentBlogs(String id) {
         Map<String, BlogSummaryDto> result = new HashMap<>();
