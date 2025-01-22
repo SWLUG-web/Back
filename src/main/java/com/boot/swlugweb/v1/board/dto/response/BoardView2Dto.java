@@ -45,7 +45,7 @@ public class BoardView2Dto {
     private String contents;
 
     //@Schema(description = "블로그 사진")
-    private String imageUrl;
+    private String imagePath;
 
     public BoardView2Dto(Board board) {
         this.boardId = Math.toIntExact(board.getBoardId());
@@ -57,7 +57,7 @@ public class BoardView2Dto {
 
         if (board.getBoardDetail() != null) {
             this.contents = board.getBoardDetail().getBoardContents();
-            this.imageUrl = board.getBoardDetail().getImage();
+            this.imagePath = board.getBoardDetail().getImage();
         }
 
     }

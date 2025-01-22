@@ -52,22 +52,7 @@ public class BoardController {
         boardService.deleteBoard(id);
         return new RedirectView("/api/board/blog");
     }
-    //    @DeleteMapping("/delete/{id}")
-//    @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다.")
-//    public ResponseEntity<List<BoardView2Dto>> deleteBoard(@PathVariable Long id) {
-//    // 로그인한 사용자 정보 가져오기
-//        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        String currentRoleType = userDetails.getAuthorities().stream()
-//            .map(authority -> authority.getAuthority())
-//            .findFirst().orElse("");
-//
-//    // 게시글 삭제 서비스 호출
-//    boardService.deleteBoard(id, currentRoleType, Long.valueOf(userDetails.getUsername()));
-//
-//    // 삭제 후 게시글 목록 가져오기
-//    List<BoardView2Dto> boardList = boardService.getBoardList();
-//    return ResponseEntity.ok(boardList);
-//}
+
     @GetMapping("/view/{id}")
     //@Operation(summary = "게시글 조회", description = "게시글을 조회합니다.")
     public ResponseEntity<BoardView2Dto> getBoard(@PathVariable Long id) {
