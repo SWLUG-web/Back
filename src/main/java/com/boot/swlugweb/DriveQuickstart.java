@@ -90,6 +90,17 @@ public class DriveQuickstart {
         service.files().create(fileMetaData, fileContent).execute();
     }
 
+//    public static void uploadFile(Drive service) throws IOException{
+//        System.out.println("\n\n 파일 업로드 시작..");
+//        Path currentWorkingDir = Paths.get("").toAbsolutePath();
+//        File fileMetaData = new File();
+//        fileMetaData.setName("test1.jpg"); //업로드 파일 이름
+//        java.io.File f = new java.io.File(currentWorkingDir + "/files/test1.jpg");
+//        FileContent fileContent = new FileContent("image/jpeg", f);
+//        service.files().create(fileMetaData, fileContent).execute();
+//    }
+
+
     //파일 업데이트
     public static void upadateFile(Drive service) throws IOException{
         System.out.println("파일 덮어씌우기");
