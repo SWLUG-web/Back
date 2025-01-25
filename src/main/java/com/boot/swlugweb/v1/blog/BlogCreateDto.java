@@ -3,6 +3,7 @@ package com.boot.swlugweb.v1.blog;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,7 +12,8 @@ import java.util.List;
 
 @Setter
 @Getter
-@Builder
+//@Builder
+@NoArgsConstructor
 public class BlogCreateDto {
     private Integer boardCategory;
     private String boardTitle;
@@ -20,5 +22,6 @@ public class BlogCreateDto {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createAt;
-    private List<MultipartFile> imageFiles; //업로드할 이미지 파일 목록
+    private List<String> imageUrl;
+//    private List<MultipartFile> imageFiles; //업로드할 이미지 파일 목록
 }

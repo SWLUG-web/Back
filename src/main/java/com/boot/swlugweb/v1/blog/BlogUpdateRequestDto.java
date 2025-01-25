@@ -16,6 +16,7 @@ public class BlogUpdateRequestDto {
     private String boardTitle;
     private String boardContent;
     private List<String> tag;
-    private List<String> imageUrls; //유지하려는 이미지 URL 목록
-    private List<MultipartFile> imageFiles; // 새로 업로드할 이미지 파일 목록
+    private List<String> imageUrl;
+//    private List<String> imageUrls; //유지하려는 이미지 URL 목록
+//    private List<MultipartFile> imageFiles; // 새로 업로드할 이미지 파일 목록
 }
