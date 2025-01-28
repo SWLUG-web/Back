@@ -60,6 +60,10 @@ dependencies {
 	// MongoDB
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
+	tasks.withType(JavaCompile) {
+		options.compilerArgs << "-parameters"
+	}
+
 
 
 }

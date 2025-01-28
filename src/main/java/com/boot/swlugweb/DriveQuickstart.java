@@ -24,6 +24,7 @@ import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class DriveQuickstart {
     private static final String APPLICATION_NAME = "Google Drive API Java Quickstart";
@@ -74,17 +75,29 @@ public class DriveQuickstart {
             }
         }
 //        uploadFile(service);
-        upadateFile(service);
+//        upadateFile(service);
 //        fileDownload(service);
 //        DeleteFile(service);
     }
 
     //파일 업로드
+//    public static void uploadFile(Drive service) throws IOException{
+//        System.out.println("\n\n 파일 업로드 시작..");
+//        Path currentWorkingDir = Paths.get("").toAbsolutePath();
+//        File fileMetaData = new File();
+//        fileMetaData.setName("test5.jpg"); //업로드 파일 이름
+//        java.io.File f = new java.io.File(currentWorkingDir + "/files/test1.jpg");
+//        FileContent fileContent = new FileContent("image/jpeg", f);
+//        service.files().create(fileMetaData, fileContent).execute();
+//    }
+
+     // 업로드 파일 이름 랜덤
     public static void uploadFile(Drive service) throws IOException{
         System.out.println("\n\n 파일 업로드 시작..");
         Path currentWorkingDir = Paths.get("").toAbsolutePath();
         File fileMetaData = new File();
-        fileMetaData.setName("test1.jpg"); //업로드 파일 이름
+        String randomFileName = UUID.randomUUID().toString() + ".jpg"; // 랜덤 파일명 생성
+        fileMetaData.setName(randomFileName); //업로드 파일 이름
         java.io.File f = new java.io.File(currentWorkingDir + "/files/test1.jpg");
         FileContent fileContent = new FileContent("image/jpeg", f);
         service.files().create(fileMetaData, fileContent).execute();
@@ -107,10 +120,10 @@ public class DriveQuickstart {
         //파일경로설정
         Path currentWorkingDir = Paths.get("").toAbsolutePath();
         File fileMetaData2 = new File();
-        fileMetaData2.setName("test2.jpg");
+        fileMetaData2.setName("test6.jpg");
         java.io.File f2 = new java.io.File(currentWorkingDir + "/files/test2.jpg");
         FileContent fileContent1 = new FileContent("image/jpg", f2);
-        service.files().update("1atmeqC0KhjJ3fUqnvq8RkMqO3gDbinXo", fileMetaData2, fileContent1).execute();
+        service.files().update("1NB6_LohUjyfyitR7pGGxc2OF-Y6IWbgZ", fileMetaData2, fileContent1).execute();
     }
 
     //파일 다운로드
@@ -123,7 +136,7 @@ public class DriveQuickstart {
                 .execute();
         List<File> files = result.getFiles();
         //파일 다운로드
-        String downFileName = "text.txt";
+        String downFileName = "test6.jpg";
         //파일 저장경로
         String downloadFolderPath = System.getProperty("user.home") + java.io.File.separator + "Downloads" + java.io.File.separator;
         String fullPath = downloadFolderPath + downFileName;
@@ -150,7 +163,7 @@ public class DriveQuickstart {
     //파일 삭제
     public static void DeleteFile(Drive service){
         try{
-            service.files().delete(realFileId).execute();
+            service.files().delete("1NB6_LohUjyfyitR7pGGxc2OF-Y6IWbgZ").execute();
             System.out.println("성공적으로 삭제했습니다.");
         }catch (IOException e){
             e.printStackTrace();
