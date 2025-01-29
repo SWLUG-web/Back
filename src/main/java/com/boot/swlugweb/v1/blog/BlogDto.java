@@ -17,7 +17,8 @@ public class BlogDto {
     private String userId;
 
     private List<String> tag;
-    private List<String> imageUrl;
+    private List<String> image;//추가
+//    private List<String> imageUrl; // image로 변경
 
     private Boolean isPin = false;
     private Integer isSecure = 0;

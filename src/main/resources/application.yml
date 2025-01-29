@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:${SWLUG_MYSQL_URL}
-    username: ${SWLUG_MYSQL_USER}
-    password: ${SWLUG_MYSQL_PW}
+    url: jdbc:mysql://134.185.119.223:65103/test
+    username: root
+    password: swlug2024
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     database: mysql
@@ -15,9 +15,16 @@ spring:
         format_sql: true
   data:
     mongodb:
-      uri: mongodb://${SWLUG_MONGODB_URI}
+      uri: mongodb://root:root@158.179.163.126:65525/swlug?authSource=admin
 
 server:
   servlet:
     session:
       timeout: 3m
+
+servlet:
+  multipart:
+    enabled: true
+    max-file-size: 10MB
+    max-request-size: 20MB
+
