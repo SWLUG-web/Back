@@ -15,7 +15,7 @@ public class NoticeDto {
     private String id;
     private String userId;
     private String nickname;
-    private String boardTitle;
+    private String noticeTitle;
     private LocalDateTime createAt;
     private List<String> tag;
     private Boolean isPin = false;
