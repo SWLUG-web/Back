@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BlogPageResponse {
+public class BlogPageResponseDto {
     private List<BlogDto> blogs;
     private long totalElements;
     private long totalPages;

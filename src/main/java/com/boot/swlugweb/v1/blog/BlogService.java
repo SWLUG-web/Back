@@ -1,5 +1,6 @@
 package com.boot.swlugweb.v1.blog;
 
+import com.boot.swlugweb.v1.mypage.MyPageRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,13 +18,15 @@ public class BlogService {
 
     private final BlogRepository blogRepository;
     private final GoogleDriveService googleDriveService;
+    private final MyPageRepository myPageRepository;
 
-    public BlogService(BlogRepository blogRepository, GoogleDriveService googleDriveService) {
+    public BlogService(BlogRepository blogRepository, GoogleDriveService googleDriveService, MyPageRepository myPageRepository) {
         this.blogRepository = blogRepository;
         this.googleDriveService = googleDriveService;
+        this.myPageRepository = myPageRepository;
     }
 
-    public BlogPageResponse getBlogsWithPaginationg(int page, String searchTerm, int size) {
+    public BlogPageResponseDto getBlogsWithPaginationg(int page, String searchTerm, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<BlogDto> blogPage;
         long totalBlogs = blogRepository.countByBlogCategoryAndIsDelete(0);
@@ -55,7 +58,7 @@ public class BlogService {
                 })
                 .collect(Collectors.toList());
 
-        return new BlogPageResponse(
+        return new BlogPageResponseDto(
                 blogsWithNumbers,
                 blogPage.getTotalElements(),
                 blogPage.getTotalPages(),
@@ -64,16 +67,23 @@ public class BlogService {
     }
 
     // 게시물 상세 조회
-    public BlogDomain getBlogDetail(String id) {
+    public BlogDetailResponseDto getBlogDetail(String id) {
         BlogDomain blog = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(id+" Blog post not found"));
+
+        String nickname = myPageRepository.findNickname(blog.getUserId());
 
         // 카테고리가 0이면 예외 발생
         if (blog.getBoardCategory() == 0) {
             throw new IllegalArgumentException("Invalid blog category");
         }
 
-        return blog;
+        BlogDetailResponseDto blogDetailResponseDto = new BlogDetailResponseDto();
+
+        blogDetailResponseDto.setBlogs(blog);
+        blogDetailResponseDto.setNickname(nickname);
+
+        return blogDetailResponseDto;
     }
 
 //    // 게시물 저장

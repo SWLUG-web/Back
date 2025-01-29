@@ -13,15 +13,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 
 @RestController
@@ -42,24 +39,22 @@ public class BlogController {
     }
 
     @GetMapping
-    public ResponseEntity<BlogPageResponse> getBlogs(
+    public ResponseEntity<BlogPageResponseDto> getBlogs(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String searchTerm,
             @RequestParam(defaultValue = "10") int size
     ){
-        BlogPageResponse response = blogService.getBlogsWithPaginationg(page, searchTerm, size);
+        BlogPageResponseDto response = blogService.getBlogsWithPaginationg(page, searchTerm, size);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/detail")
-    public ResponseEntity<BlogDomain> getBlogDetail(@RequestBody Map<String, String> request) {
+    public ResponseEntity<BlogDetailResponseDto> getBlogDetail(@RequestBody Map<String, String> request) {
         String id = request.get("id");
 
-        BlogDomain blog = blogService.getBlogDetail(id);
+        BlogDetailResponseDto blog = blogService.getBlogDetail(id);
         return ResponseEntity.ok(blog);
     }
-
-
 
 
 // google 블로그 저장
@@ -111,7 +106,7 @@ public class BlogController {
 //        }
 //
 //    }
-    
+
 
 
     // google 블로그 수정
