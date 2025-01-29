@@ -105,7 +105,6 @@ public class NoticeService {
         if (noticeUpdateRequestDto.getImageUrl() != null) {
             notice.setImage(noticeUpdateRequestDto.getImageUrl());
         }
-        notice.setCreateAt(LocalDateTime.now());
 
         noticeRepository.save(notice);
     }
