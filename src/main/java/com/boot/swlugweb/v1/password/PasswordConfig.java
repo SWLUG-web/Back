@@ -11,17 +11,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class PasswordConfig {
 
-    @Bean
-    public SecurityFilterChain passwordFilterChain(HttpSecurity http) throws Exception {
-        http
-                .securityMatcher("/password/**")
-                .csrf((csrf) -> csrf.disable())
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/password/request-reset").permitAll()
-                        .requestMatchers("/password/reset").permitAll()
-                        .anyRequest().authenticated()
-                );
-
-        return http.build();
-    }
+//    @Bean
+//    public SecurityFilterChain passwordFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .securityMatcher("/password/**")
+//                .csrf((csrf) -> csrf.disable())
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/password/request-reset").permitAll()
+//                        .requestMatchers("/password/reset").permitAll()
+//                        .anyRequest().authenticated()
+//                );
+//
+//        return http.build();
+//    }
 }
