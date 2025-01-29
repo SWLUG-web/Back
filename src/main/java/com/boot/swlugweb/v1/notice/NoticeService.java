@@ -1,5 +1,6 @@
 package com.boot.swlugweb.v1.notice;
 
+import com.boot.swlugweb.v1.mypage.MyPageRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,14 +15,17 @@ import java.util.stream.Collectors;
 @Service
 public class NoticeService {
     private final NoticeRepository noticeRepository;
+    private final MyPageRepository myPageRepository;
 
-    public NoticeService(NoticeRepository noticeRepository) {
+    public NoticeService(NoticeRepository noticeRepository, MyPageRepository myPageRepository) {
         this.noticeRepository = noticeRepository;
+        this.myPageRepository = myPageRepository;
     }
 
-    public NoticePageResponse getNoticesWithPagination(int page, String searchTerm, int size) {
+    public NoticePageResponseDto getNoticesWithPagination(int page, String searchTerm, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<NoticeDto> noticePage;
+
         long totalNotices = noticeRepository.countByBoardCategoryAndIsDelete(0, 0);
 
         if (searchTerm == null || searchTerm.trim().isEmpty()) {
@@ -43,14 +47,17 @@ public class NoticeService {
         // 번호 부여 - 한 번의 쿼리로 처리
         List<NoticeDto> noticesWithNumbers = noticePage.getContent().stream()
                 .map(notice -> {
+                    String nickname = myPageRepository.findNickname(notice.getUserId());
                     // 현재 게시글보다 최신인 게시글 수를 한 번에 조회
                     long olderCount = noticeRepository.countOlderNotices(0, notice.getCreateAt());
                     notice.setDisplayNumber(totalNotices - olderCount);
+                    notice.setNickname(nickname);
                     return notice;
                 })
                 .collect(Collectors.toList());
 
-        return new NoticePageResponse(
+
+        return new NoticePageResponseDto(
                 noticesWithNumbers,
                 noticePage.getTotalElements(),
                 noticePage.getTotalPages(),
