@@ -80,8 +80,15 @@ public class BlogService {
 
         BlogDetailResponseDto blogDetailResponseDto = new BlogDetailResponseDto();
 
-        blogDetailResponseDto.setBlogs(blog);
+        blogDetailResponseDto.setId(blog.getId());
+        blogDetailResponseDto.setUserId(blog.getUserId());
+        blogDetailResponseDto.setBoardTitle(blog.getBoardTitle());
+        blogDetailResponseDto.setBoardCategory(blog.getBoardCategory());
+        blogDetailResponseDto.setBoardContents(blog.getBoardContents());
         blogDetailResponseDto.setNickname(nickname);
+        blogDetailResponseDto.setCreateAt(blog.getCreateAt());
+        blogDetailResponseDto.setTag(blog.getTag());
+        blogDetailResponseDto.setImage(blog.getImage());
 
         return blogDetailResponseDto;
     }

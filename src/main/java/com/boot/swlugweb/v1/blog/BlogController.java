@@ -60,8 +60,8 @@ public class BlogController {
 // google 블로그 저장
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> saveBlog(
-            @RequestPart BlogCreateDto blogCreateDto,
-            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+            @RequestPart(name = "blogCreateDto") BlogCreateDto blogCreateDto,
+            @RequestPart(name = "imageFiles", required = false) List<MultipartFile> imageFiles,
             HttpSession session) throws GeneralSecurityException, IOException {
 
         String userId = (String) session.getAttribute("USER");
@@ -112,8 +112,8 @@ public class BlogController {
     // google 블로그 수정
     @PostMapping(value="/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> updateBlogPost(
-            @RequestPart BlogUpdateRequestDto blogUpdateRequestDto,
-            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+            @RequestPart(name = "blogUpdateRequestDto") BlogUpdateRequestDto blogUpdateRequestDto,
+            @RequestPart(name = "imageFiles", required = false) List<MultipartFile> imageFiles,
             HttpSession session
     ) throws GeneralSecurityException, IOException {
         String userId = (String) session.getAttribute("USER");
