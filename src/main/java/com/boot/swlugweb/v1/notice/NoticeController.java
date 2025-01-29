@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -15,12 +14,12 @@ public class NoticeController {
     private NoticeService noticeService;
 
     @GetMapping
-    public ResponseEntity<NoticePageResponse> getNotices(
+    public ResponseEntity<NoticePageResponseDto> getNotices(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") String searchTerm,
             @RequestParam(defaultValue = "10") int size
     ) {
-        NoticePageResponse response = noticeService.getNoticesWithPagination(page, searchTerm, size);
+        NoticePageResponseDto response = noticeService.getNoticesWithPagination(page, searchTerm, size);
         return ResponseEntity.ok(response);
     }
 
