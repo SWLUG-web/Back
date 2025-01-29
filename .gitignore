@@ -4,6 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+/tokens
 
 ### STS ###
 .apt_generated
@@ -109,6 +110,7 @@ desktop.ini
 
 # Environment files
 application.properties
+credentials.json
 
 #프론트
 templeates/

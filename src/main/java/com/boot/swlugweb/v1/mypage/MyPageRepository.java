@@ -15,4 +15,7 @@ public interface MyPageRepository extends JpaRepository<SignupUserInfoDomain, In
             "JOIN FETCH ui.signupUserRuleType ut " +
             "WHERE u.userId = :userId")
     Optional<SignupUserInfoDomain> findByUserId(@Param("userId") String userId);
+
+    @Query("SELECT urt.nickname FROM SignupUserRuleTypeDomain urt WHERE urt.userId = :userId")
+    String findNickname(@Param("userId") String userId);
 }
