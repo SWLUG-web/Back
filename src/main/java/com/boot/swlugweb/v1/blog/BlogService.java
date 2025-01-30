@@ -31,7 +31,7 @@ public class BlogService {
         Page<BlogDto> blogPage;
         long totalBlogs = blogRepository.countByBlogCategoryAndIsDelete(0);
 
-        if (searchTerm != null && !searchTerm.isEmpty()) {
+        if (searchTerm == null && searchTerm.isEmpty()) {
             blogPage = blogRepository.findByBlogIsDeleteOrderByIsPinDescCreateAtDesc(0, pageable);
         } else {
             try {
