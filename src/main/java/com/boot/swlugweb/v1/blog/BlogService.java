@@ -1,6 +1,7 @@
 package com.boot.swlugweb.v1.blog;
 
 import com.boot.swlugweb.v1.mypage.MyPageRepository;
+import org.apache.tomcat.util.codec.binary.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,7 +27,7 @@ public class BlogService {
         this.myPageRepository = myPageRepository;
     }
 
-    public BlogPageResponseDto getBlogsWithPaginationg(int page, Integer category, String searchTerm, int size) {
+    public BlogPageResponseDto getBlogsWithPaginationg(int page, Integer category, String searchTerm, int size, List<String> tags) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<BlogDto> blogPage;
         List<Integer> categories;
@@ -41,8 +42,12 @@ public class BlogService {
             categories = List.of(category);
         }
 
-        if (searchTerm == null || searchTerm.isEmpty()) {
-            blogPage = blogRepository.findByBlogIsDeleteOrderByIsPinDescCreateAtDesc(categories, 0, pageable);
+        if (searchTerm == null || searchTerm.trim().isEmpty()) {
+            if (tags == null || tags.isEmpty()) {
+                blogPage = blogRepository.findByBlogIsDeleteOrderByIsPinDescCreateAtDesc(categories, 0, pageable);
+            } else {
+                blogPage = blogRepository.findByBlogIsDeleteOrderByIsPinDescCreateAtDescAndTag(categories, tags, 0, pageable);
+            }
         } else {
             try {
                 String decodedSearchTerm = java.net.URLDecoder.decode(searchTerm, "UTF-8");
@@ -50,9 +55,14 @@ public class BlogService {
                         .replaceAll("[\\s]+", " ")
                         .replaceAll(" ", "(?:[ ]|)") + ".*";
 
-                blogPage = blogRepository.findByBlogTitleContainingAndIsDelete(
-                        categories, regexPattern, 0, pageable
-                );
+                if (tags == null || tags.isEmpty()) {
+                    blogPage = blogRepository.findByBlogTitleContainingAndIsDelete(
+                            categories, regexPattern, 0, pageable
+                    );
+                } else {
+                    blogPage = blogRepository.findByBlogTitleContainingAndIsDeleteAndTag(categories, regexPattern, tags, 0, pageable);
+                }
+
             } catch (Exception e) {
                 throw new RuntimeException("검색어 처리 중 오류가 발생했습니다.", e);
             }
@@ -351,38 +361,29 @@ public class BlogService {
 
     }
 
-    //태그 검색
-    public List<BlogDomain> searchBlogsByTag(String tag, int page) {
-        // 태그 값이 없으면 예외 발생
-        if (tag == null || tag.trim().isEmpty()) {
-            throw new IllegalArgumentException("Tag cannot be null or empty");
-        }
-
-        // 페이지 번호 검증
-        if (page < 0) {
-            throw new IllegalArgumentException("Page number cannot be negative");
-        }
-
-        // 페이지네이션 적용
-        Pageable pageable = PageRequest.of(page, 5);
-
-        // 태그 검색
-        List<BlogDomain> results = blogRepository.findByTag(tag, pageable);
-
-        // 결과가 없을 경우 빈 리스트 반환
-        return results.isEmpty() ? Collections.emptyList() : results;
+    public List<String> getAllTags() {
+        return blogRepository.findAllTags();
     }
 
-//    // 카테고리 검색
-//    public List<BlogDomain> searchBlogsByCategory(int category, int page) {
-//        if (category < 0) {
-//            throw new IllegalArgumentException("Category must be non-negative");
+    //태그 검색
+//    public List<BlogDomain> searchBlogsByTag(String tag, int page) {
+//        // 태그 값이 없으면 예외 발생
+//        if (tag == null || tag.trim().isEmpty()) {
+//            throw new IllegalArgumentException("Tag cannot be null or empty");
 //        }
+//
+//        // 페이지 번호 검증
 //        if (page < 0) {
 //            throw new IllegalArgumentException("Page number cannot be negative");
 //        }
+//
+//        // 페이지네이션 적용
 //        Pageable pageable = PageRequest.of(page, 5);
-//        List<BlogDomain> results = blogRepository.findByCategory(category, pageable);
+//
+//        // 태그 검색
+//        List<BlogDomain> results = blogRepository.findByTag(tag, pageable);
+//
+//        // 결과가 없을 경우 빈 리스트 반환
 //        return results.isEmpty() ? Collections.emptyList() : results;
 //    }
 

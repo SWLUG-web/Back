@@ -43,9 +43,10 @@ public class BlogController {
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "") Integer category,
             @RequestParam(defaultValue = "") String searchTerm,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) List<String> tags
     ){
-        BlogPageResponseDto response = blogService.getBlogsWithPaginationg(page, category, searchTerm, size);
+        BlogPageResponseDto response = blogService.getBlogsWithPaginationg(page, category, searchTerm, size, tags);
         return ResponseEntity.ok(response);
     }
 
@@ -180,33 +181,23 @@ public class BlogController {
         }
     }
 
-
-
-    // 태그 검색
-    @GetMapping("/tagSearch")
-    public ResponseEntity<List<BlogDomain>> searchBlogsByTag(
-            @RequestParam String tag,
-            @RequestParam(defaultValue = "0") int page
-    ) {
-        try {
-            List<BlogDomain> blogs = blogService.searchBlogsByTag(tag, page);
-            return ResponseEntity.ok(blogs);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null); // 잘못된 입력 처리
-        }
+    @GetMapping("/tags")
+    public ResponseEntity<List<String>> getTags() {
+        List<String> tags = blogService.getAllTags();
+        return ResponseEntity.ok(tags);
     }
 
-//    // 카테고리 검색
-//    @GetMapping("/category")
-//    public ResponseEntity<List<BlogDomain>> searchBlogsByCategory(
-//            @RequestParam int category,
+    // 태그 검색
+//    @GetMapping("/tagSearch")
+//    public ResponseEntity<List<BlogDomain>> searchBlogsByTag(
+//            @RequestParam String tag,
 //            @RequestParam(defaultValue = "0") int page
 //    ) {
 //        try {
-//            List<BlogDomain> blogs = blogService.searchBlogsByCategory(category, page);
+//            List<BlogDomain> blogs = blogService.searchBlogsByTag(tag, page);
 //            return ResponseEntity.ok(blogs);
 //        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body(null);
+//            return ResponseEntity.badRequest().body(null); // 잘못된 입력 처리
 //        }
 //    }
 
