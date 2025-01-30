@@ -26,13 +26,23 @@ public class BlogService {
         this.myPageRepository = myPageRepository;
     }
 
-    public BlogPageResponseDto getBlogsWithPaginationg(int page, String searchTerm, int size) {
+    public BlogPageResponseDto getBlogsWithPaginationg(int page, Integer category, String searchTerm, int size) {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<BlogDto> blogPage;
+        List<Integer> categories;
         long totalBlogs = blogRepository.countByBlogCategoryAndIsDelete(0);
 
-        if (searchTerm == null && searchTerm.isEmpty()) {
-            blogPage = blogRepository.findByBlogIsDeleteOrderByIsPinDescCreateAtDesc(0, pageable);
+        // 카테고리가 1~4인지 확인
+        if (category == null || category < 1 || category > 4) {
+            // 1~4가 아닌 경우 전체 조회 (0 제외)
+            categories = Arrays.asList(1, 2, 3, 4);
+        } else {
+            // 1~4 중 하나면 해당 카테고리만 조회
+            categories = List.of(category);
+        }
+
+        if (searchTerm == null || searchTerm.isEmpty()) {
+            blogPage = blogRepository.findByBlogIsDeleteOrderByIsPinDescCreateAtDesc(categories, 0, pageable);
         } else {
             try {
                 String decodedSearchTerm = java.net.URLDecoder.decode(searchTerm, "UTF-8");
@@ -41,7 +51,7 @@ public class BlogService {
                         .replaceAll(" ", "(?:[ ]|)") + ".*";
 
                 blogPage = blogRepository.findByBlogTitleContainingAndIsDelete(
-                        regexPattern, 0, pageable
+                        categories, regexPattern, 0, pageable
                 );
             } catch (Exception e) {
                 throw new RuntimeException("검색어 처리 중 오류가 발생했습니다.", e);
@@ -363,17 +373,17 @@ public class BlogService {
         return results.isEmpty() ? Collections.emptyList() : results;
     }
 
-    // 카테고리 검색
-    public List<BlogDomain> searchBlogsByCategory(int category, int page) {
-        if (category < 0) {
-            throw new IllegalArgumentException("Category must be non-negative");
-        }
-        if (page < 0) {
-            throw new IllegalArgumentException("Page number cannot be negative");
-        }
-        Pageable pageable = PageRequest.of(page, 5);
-        List<BlogDomain> results = blogRepository.findByCategory(category, pageable);
-        return results.isEmpty() ? Collections.emptyList() : results;
-    }
+//    // 카테고리 검색
+//    public List<BlogDomain> searchBlogsByCategory(int category, int page) {
+//        if (category < 0) {
+//            throw new IllegalArgumentException("Category must be non-negative");
+//        }
+//        if (page < 0) {
+//            throw new IllegalArgumentException("Page number cannot be negative");
+//        }
+//        Pageable pageable = PageRequest.of(page, 5);
+//        List<BlogDomain> results = blogRepository.findByCategory(category, pageable);
+//        return results.isEmpty() ? Collections.emptyList() : results;
+//    }
 
 }

@@ -41,10 +41,11 @@ public class BlogController {
     @GetMapping
     public ResponseEntity<BlogPageResponseDto> getBlogs(
             @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") Integer category,
             @RequestParam(defaultValue = "") String searchTerm,
             @RequestParam(defaultValue = "10") int size
     ){
-        BlogPageResponseDto response = blogService.getBlogsWithPaginationg(page, searchTerm, size);
+        BlogPageResponseDto response = blogService.getBlogsWithPaginationg(page, category, searchTerm, size);
         return ResponseEntity.ok(response);
     }
 
@@ -195,19 +196,19 @@ public class BlogController {
         }
     }
 
-    // 카테고리 검색
-    @GetMapping("/category")
-    public ResponseEntity<List<BlogDomain>> searchBlogsByCategory(
-            @RequestParam int category,
-            @RequestParam(defaultValue = "0") int page
-    ) {
-        try {
-            List<BlogDomain> blogs = blogService.searchBlogsByCategory(category, page);
-            return ResponseEntity.ok(blogs);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(null);
-        }
-    }
+//    // 카테고리 검색
+//    @GetMapping("/category")
+//    public ResponseEntity<List<BlogDomain>> searchBlogsByCategory(
+//            @RequestParam int category,
+//            @RequestParam(defaultValue = "0") int page
+//    ) {
+//        try {
+//            List<BlogDomain> blogs = blogService.searchBlogsByCategory(category, page);
+//            return ResponseEntity.ok(blogs);
+//        } catch (IllegalArgumentException e) {
+//            return ResponseEntity.badRequest().body(null);
+//        }
+//    }
 
     @PostMapping("/adjacent")
     public ResponseEntity<Map<String, BlogSummaryDto>> searchBlogsByAdjacent(@RequestBody Map<String, String> request) {
