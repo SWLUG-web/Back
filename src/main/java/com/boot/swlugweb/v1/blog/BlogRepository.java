@@ -12,19 +12,24 @@ import java.util.List;
 @Repository
 public interface BlogRepository extends MongoRepository<BlogDomain, String> {
     @Query(value = "{ " +
-            "'board_category': { $ne : 0 }, " +
-            "'board_title': { $regex: ?0, $options: 'i' }, " +
-            "'is_delete': ?1 }",
+//            "'board_category': { $ne : 0 }, " +
+            "'board_category' : { $in: ?0 }, " +
+            "'board_title': { $regex: ?1, $options: 'i' }, " +
+            "'is_delete': ?2 }",
             sort = "{ 'is_pin': -1, 'created_at': -1, '_id': -1 }")
     Page<BlogDto> findByBlogTitleContainingAndIsDelete(
+            List<Integer> category,
             String searchTerm,
             Integer isDelete,
             Pageable pageable
     );
 
-    @Query(value = "{ 'board_category': { $ne : 0 }, 'is_delete': ?0 }",
-            sort = "{ 'is_pin': -1, 'created_at': -1, '_id': -1 }")
+//    @Query(value = "{ 'board_category': { $ne : 0 }, 'is_delete': ?0 }",
+//            sort = "{ 'is_pin': -1, 'created_at': -1, '_id': -1 }")
+    @Query(value = "{ 'board_category' : { $in: ?0 }, 'is_delete': ?1 }",
+    sort = "{ 'is_pin':  -1, 'created_at': -1, '_id': -1 }")
     Page<BlogDto> findByBlogIsDeleteOrderByIsPinDescCreateAtDesc(
+            List<Integer> category,
             Integer isDelete,
             Pageable pageable
     );
