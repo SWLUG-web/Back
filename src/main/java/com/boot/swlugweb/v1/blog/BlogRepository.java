@@ -39,7 +39,7 @@ public interface BlogRepository extends MongoRepository<BlogDomain, String> {
     );
 
     @Query(value = "{ 'board_category' : { $in: ?0 }, 'is_delete': ?1 }",
-    sort = "{ 'is_pin':  -1, 'created_at': -1, '_id': -1 }")
+            sort = "{ 'is_pin':  -1, 'created_at': -1, '_id': -1 }")
     Page<BlogDto> findByBlogIsDeleteOrderByIsPinDescCreateAtDesc(
             List<Integer> category,
             Integer isDelete,
@@ -54,17 +54,6 @@ public interface BlogRepository extends MongoRepository<BlogDomain, String> {
             Integer isDelete,
             Pageable pageable
     );
-
-    @Query(count = true, value = "{ 'board_category': { $ne : 0 }, 'is_delete': ?0 }")
-    long countByBlogCategoryAndIsDelete(Integer isDelete);
-
-    @Query(value = "{ " +
-            "'board_category': { $ne : 0 }, " +
-            "'is_delete': ?0, " +
-            "'created_at': { $gt: ?1 }" +
-            "}",
-            count = true)
-    long countOlderBlogs(int isDelete, LocalDateTime createAt);
 
     // 이전 게시물 조회 (더 최신 글 중 가장 가까운 1개)
     @Query(value = "{ 'board_category': { $ne : 0 }, 'is_delete': 0, 'created_at': { $gt: ?0 }}")
@@ -81,5 +70,4 @@ public interface BlogRepository extends MongoRepository<BlogDomain, String> {
             "{ '$project': { '_id': 0, 'tag': '$_id' } }" // _id를 제외하고 tag 값만 반환
     })
     List<String> findAllTags();
-
 }

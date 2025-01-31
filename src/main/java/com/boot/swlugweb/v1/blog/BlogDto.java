@@ -15,6 +15,8 @@ public class BlogDto {
     private String boardTitle;
     private LocalDateTime createAt;
     private String userId;
+    private String nickname;
+    private String categoryName; // 추가된 필드
 
     private List<String> tag;
     private List<String> image;//추가
@@ -24,6 +26,4 @@ public class BlogDto {
     private Integer isSecure = 0;
     private Integer isDelete = 0;
 
-    // 추가된 필드
-    private Long displayNumber;
 }
