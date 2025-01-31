@@ -1,7 +1,6 @@
 package com.boot.swlugweb.v1.admin;
 
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import com.boot.swlugweb.v1.signup.SignupUserRuleTypeDomain;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,38 +8,26 @@ import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
-    private final AdminUserInfoRepository adminUserInfoRepository;
-    private final AdminUserTypeRepository adminUserTypeRepository;
-    private final AdminUsersRepository adminUsersRepository;
+    private final AdminRepository adminRepository;
+    private final AdminBlogRepository adminBlogRepository;
 
-    public AdminService(AdminUserInfoRepository adminUserInfoRepository, AdminUserTypeRepository adminUserTypeRepository, AdminUsersRepository adminUsersRepository) {
-        this.adminUserInfoRepository = adminUserInfoRepository;
-        this.adminUserTypeRepository = adminUserTypeRepository;
-        this.adminUsersRepository = adminUsersRepository;
+    public AdminService(AdminRepository adminRepository, AdminBlogRepository adminBlogRepository) {
+        this.adminRepository = adminRepository;
+        this.adminBlogRepository = adminBlogRepository;
     }
 
-    public List<AdminUserResponseDto> getAllUsers() {
-        // 모든 AdminUserInfoDomain 데이터를 가져와서 필요한 형식으로 변환
-        return adminUserInfoRepository.findAll().stream()
-                .map(userInfo -> new AdminUserResponseDto(
-                        userInfo.getUsersNum().getUsersNum(),
-                        userInfo.getUsersNum().getUserId(),
-                        userInfo.getEmail(),
-                        userInfo.getPhone(),
-                        userInfo.getUserType().getNickname(),
-                        userInfo.getUserType().getRoleType()
+    public List<AdminUserResponseDto> getUsers() {
+        List<SignupUserRuleTypeDomain> allUsers = adminRepository.findByUser();
+
+        return allUsers.stream()
+                .map(user -> new AdminUserResponseDto(
+                        user.getTypeNum(),
+                        user.getUserId(),
+                        user.getNickname(),
+                        user.getRole_type(),
+                        user.getVersion()
                 ))
                 .collect(Collectors.toList());
     }
 
-//    // 모든 데이터 삭제
-//    @Transactional
-//    public void deleteUserInfo(Integer usersInfoNum) {
-//        AdminUserInfoDomain userInfo = adminUserInfoRepository.findByUsersNum(usersInfoNum)
-//                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-//        System.out.println(userInfo);
-//
-//        // 부모 엔터티 삭제 -> 연관된 자식 엔터티도 자동 삭제됨
-//        adminUserInfoRepository.delete(userInfo);
-//    }
 }
