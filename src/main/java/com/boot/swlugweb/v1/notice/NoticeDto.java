@@ -22,6 +22,8 @@ public class NoticeDto {
     private Integer isSecure = 0;
     private Integer isDelete = 0;
 
+    private List<String> image; //추가
+
     // 추가된 필드
     private Long displayNumber;
 }
