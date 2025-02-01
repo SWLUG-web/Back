@@ -55,13 +55,13 @@ public interface BlogRepository extends MongoRepository<BlogDomain, String> {
             Pageable pageable
     );
 
-    // 이전 게시물 조회 (더 최신 글 중 가장 가까운 1개)
-    @Query(value = "{ 'board_category': { $ne : 0 }, 'is_delete': 0, 'created_at': { $gt: ?0 }}")
-    List<BlogDomain> findPrevBlogs(LocalDateTime createAt);
+    @Query(value = "{ 'board_category': { $in: ?0 }, 'is_delete': 0, 'created_at': { $gt: ?1 }}",
+            sort = "{ 'created_at': 1 }")
+    List<BlogDomain> findPrevBlogs(List<Integer> categories, LocalDateTime createAt);
 
-    // 다음 게시물 조회 (더 오래된 글 중 가장 가까운 1개)
-    @Query(value = "{ 'board_category': { $ne : 0 }, 'is_delete': 0, 'created_at': { $lt: ?0 }}")
-    List<BlogDomain> findNextBlogs(LocalDateTime createAt);
+    @Query(value = "{ 'board_category': { $in: ?0 }, 'is_delete': 0, 'created_at': { $lt: ?1 }}",
+            sort = "{ 'created_at': -1 }")
+    List<BlogDomain> findNextBlogs(List<Integer> categories, LocalDateTime createAt);
 
     // tags 필드에서 중복을 제거한 리스트 반환
     @Aggregation(pipeline = {
