@@ -231,24 +231,32 @@ public class BlogService {
 
         BlogDomain currentBlog = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException(id + " 게시물이 없습니다."));
-        LocalDateTime currentCreateAt = currentBlog.getCreateAt();
 
-        List<BlogDomain> prevBlogs = blogRepository.findPrevBlogs(currentCreateAt);
+        LocalDateTime currentCreateAt = currentBlog.getCreateAt();
+        Integer currentCategory = currentBlog.getBoardCategory();
+
+        // 카테고리 목록 설정
+        List<Integer> categories;
+        if (currentCategory == null) {
+            categories = Arrays.asList(1, 2, 3, 4); // 전체 카테고리
+        } else {
+            categories = Collections.singletonList(currentCategory); // 특정 카테고리
+        }
+
+        // 이전 글 찾기
+        List<BlogDomain> prevBlogs = blogRepository.findPrevBlogs(categories, currentCreateAt);
         if (!prevBlogs.isEmpty()) {
-            BlogDomain prevBlog = prevBlogs.stream()
-                    .min((a, b) -> a.getCreateAt().compareTo(b.getCreateAt()))
-                    .get();
+            BlogDomain prevBlog = prevBlogs.get(0); // sort 설정으로 인해 첫 번째 요소가 가장 가까운 이전 글
             BlogSummaryDto prevDto = new BlogSummaryDto();
             prevDto.setId(prevBlog.getId());
             prevDto.setBlogTitle(prevBlog.getBoardTitle());
             result.put("previous", prevDto);
         }
 
-        List<BlogDomain> nextBlogs = blogRepository.findNextBlogs(currentCreateAt);
+        // 다음 글 찾기
+        List<BlogDomain> nextBlogs = blogRepository.findNextBlogs(categories, currentCreateAt);
         if (!nextBlogs.isEmpty()) {
-            BlogDomain nextBlog = nextBlogs.stream()
-                    .max((a, b) -> a.getCreateAt().compareTo(b.getCreateAt()))
-                    .get();
+            BlogDomain nextBlog = nextBlogs.get(0); // sort 설정으로 인해 첫 번째 요소가 가장 가까운 다음 글
             BlogSummaryDto nextDto = new BlogSummaryDto();
             nextDto.setId(nextBlog.getId());
             nextDto.setBlogTitle(nextBlog.getBoardTitle());
