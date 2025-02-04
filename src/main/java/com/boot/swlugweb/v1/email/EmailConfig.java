@@ -47,14 +47,14 @@ public class EmailConfig {
         return mailSender; //mailSender를 빈으로 등록
     }
 
-    @Bean
-    public SecurityFilterChain emailFilterChain(HttpSecurity http) throws Exception {
-        http
-                .securityMatcher("/email/**")
-                .csrf((csrf) -> csrf.disable()) //csrf 보호 비활성화
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll()  //해당 경로 모든 요청 허용
-                );
-
-        return http.build();
-    }
+//    @Bean
+//    public SecurityFilterChain emailFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .securityMatcher("/email/**")
+//                .csrf((csrf) -> csrf.disable()) //csrf 보호 비활성화
+//                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll()  //해당 경로 모든 요청 허용
+//                );
+//
+//        return http.build();
+//    }
 }
