@@ -14,33 +14,33 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 public class LoginConfig {
 
     //로그인 수정
-    @Bean
-    public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
-        http
-                .securityMatcher("/login/**", "/password/**")  // Updated paths
-                .csrf((csrf) -> csrf.disable())
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .maximumSessions(1)
-                        .maxSessionsPreventsLogin(false)
-                )
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/login").permitAll()
-                        .requestMatchers("/login/check").permitAll()
-                        .requestMatchers("/login/logout").permitAll()
-                        .requestMatchers("/password/verify").permitAll()
-                        .requestMatchers("/password/verify-auth").permitAll()
-                        .requestMatchers("/password/reset").permitAll()
-                        .anyRequest().authenticated()
-                );
-
-        return http.build();
-    }
+//    @Bean
+//    public SecurityFilterChain loginFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .securityMatcher("/login/**", "/password/**")  // Updated paths
+//                .csrf((csrf) -> csrf.disable())
+//                .sessionManagement(session -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//                        .maximumSessions(1)
+//                        .maxSessionsPreventsLogin(false)
+//                )
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/login").permitAll()
+//                        .requestMatchers("/login/check").permitAll()
+//                        .requestMatchers("/login/logout").permitAll()
+//                        .requestMatchers("/password/verify").permitAll()
+//                        .requestMatchers("/password/verify-auth").permitAll()
+//                        .requestMatchers("/password/reset").permitAll()
+//                        .anyRequest().authenticated()
+//                );
+//
+//        return http.build();
+//    }
 
 
     // HTTP 세션 이벤트 리스너 설정
-    @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
-        return new HttpSessionEventPublisher();
-    }
+//    @Bean
+//    public HttpSessionEventPublisher httpSessionEventPublisher() {
+//        return new HttpSessionEventPublisher();
+//    }
 }
