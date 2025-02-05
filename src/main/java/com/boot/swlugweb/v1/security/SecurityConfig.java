@@ -12,7 +12,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
@@ -33,10 +32,12 @@ public class SecurityConfig {
                         // 블로그 관련 권한
                         // 공지사항 관련 권한
                         .requestMatchers("/api/blog/**").permitAll()
-                        .requestMatchers("/api/notice/save").hasRole("ADMIN")
-                        .requestMatchers("/api/notice/delete").hasRole("ADMIN")
-                        .requestMatchers("/api/notice/details").hasAnyRole("ADMIN", "USER", "GUEST")
-                        .requestMatchers("/api/notice/adjacent").hasAnyRole("ADMIN", "USER", "GUEST")
+                        .requestMatchers("/api/blog/upload-image").permitAll()
+                        .requestMatchers("/api/blog/images/**").permitAll()  // 이미지 조회 URL 허용
+                        .requestMatchers("/api/notice/save").permitAll()
+                        .requestMatchers("/api/notice/delete").permitAll()
+                        .requestMatchers("/api/notice/details").permitAll()
+                        .requestMatchers("/api/notice/adjacent").permitAll()
                         // 로그인/회원가입 관련 권한
                         .requestMatchers("/api/login/**").permitAll()
                         .requestMatchers("/api/login/check").permitAll()
@@ -50,7 +51,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/password/verify-auth").permitAll()
                         .requestMatchers("/api/api/email/**").permitAll()
                         .requestMatchers("/error").permitAll()
-                        
+
                 );
         return http.build();
     }
@@ -60,10 +61,10 @@ public class SecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**") // ✅ API 요청 허용
+                registry.addMapping("/**") // API 요청 허용
                         .allowedHeaders("*")
-                        .allowedOrigins("http://localhost:3000") // ✅ 프론트엔드 주소 허용
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // ✅ 허용할 HTTP 메서드
+                        .allowedOrigins("http://localhost:3000") // 론트엔드 주소 허용
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") //허용할 HTTP 메서드
                         .allowCredentials(true)
                         .exposedHeaders("Authorization");
             }
