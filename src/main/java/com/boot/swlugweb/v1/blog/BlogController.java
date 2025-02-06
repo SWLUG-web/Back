@@ -1,5 +1,7 @@
 package com.boot.swlugweb.v1.blog;
 
+import com.boot.swlugweb.v1.notice.NoticeUpdateRequestDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.gson.Gson;
@@ -111,10 +113,36 @@ public class BlogController {
 
 
 
-    // google 블로그 수정
-    @PostMapping(value="/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    // google 블로그 수정 (최종x)
+//    @PostMapping(value="/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<String> updateBlogPost(
+//            @RequestPart(name = "blogUpdateRequestDto") BlogUpdateRequestDto blogUpdateRequestDto,
+//            @RequestPart(name = "imageFiles", required = false) List<MultipartFile> imageFiles,
+//            HttpSession session
+//    ) throws GeneralSecurityException, IOException {
+//        String userId = (String) session.getAttribute("USER");
+//        if (userId == null) {
+//            return ResponseEntity.status(401).build();
+//        }
+//
+//        try {
+//            if(imageFiles != null && !imageFiles.isEmpty()) {
+//                blogUpdateRequestDto.setImageFiles(imageFiles);
+//            }
+//            blogService.updateBlog(blogUpdateRequestDto, userId);
+//
+//            return ResponseEntity.status(302)
+//                    .header(HttpHeaders.LOCATION,"/api/blog")
+//                    .build();
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+//        }
+//    }
+
+    // google 블로그 수정 (최종)
+    @PostMapping(value="/update", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<String> updateBlogPost(
-            @RequestPart(name = "blogUpdateRequestDto") BlogUpdateRequestDto blogUpdateRequestDto,
+            @RequestPart(name = "blogUpdateRequestDto" ,required = false) String blogUpdateRequestDtoString,
             @RequestPart(name = "imageFiles", required = false) List<MultipartFile> imageFiles,
             HttpSession session
     ) throws GeneralSecurityException, IOException {
@@ -124,6 +152,9 @@ public class BlogController {
         }
 
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            BlogUpdateRequestDto blogUpdateRequestDto = objectMapper.readValue(blogUpdateRequestDtoString, BlogUpdateRequestDto.class);
+
             if(imageFiles != null && !imageFiles.isEmpty()) {
                 blogUpdateRequestDto.setImageFiles(imageFiles);
             }
