@@ -6,6 +6,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,22 +53,31 @@ public class SecurityUserPasswordAuthenticationFilter extends UsernamePasswordAu
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
-                                            Authentication authResult ) throws IOException, ServletException {
+                                            Authentication authResult) throws IOException, ServletException {
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
 
+        // 사용자의 첫 번째 권한을 가져와서 세션에 저장
+        String role = userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(GrantedAuthority::getAuthority)
+                .orElse("");
+        HttpSession session = request.getSession();
+        session.setAttribute("ROLE", role);
+
+        // 인증 성공 시 JSON 응답 구성
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(
                 Map.of(
-                     "success", true,
-                     "userId", userDetails.getUsername(),
-                        "role", userDetails.getAuthorities().stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .findFirst()
-                                .orElse("")
-                    )
-            ));
+                        "success", true,
+                        "userId", userDetails.getUsername(),
+                        "role", role
+                )
+        ));
+
+        // 필터 체인을 계속 진행하지 않고 여기서 종료
     }
+
 
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request,

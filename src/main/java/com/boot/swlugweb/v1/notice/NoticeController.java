@@ -54,10 +54,10 @@ public class NoticeController {
     public ResponseEntity<?> saveNotice(@RequestBody NoticeCreateDto noticeCreateDto,
                                         HttpSession session) {
         String userId = (String) session.getAttribute("USER");
-//        String roleType = (String) session.getAttribute("ROLE");
-//        System.out.println(roleType);
-        if (userId == null) {
-            return ResponseEntity.status(401).build();
+        String role = (String) session.getAttribute("ROLE");
+
+        if (userId == null || !"0".equals(role)) {  // 문자열 "0"과 비교
+            return ResponseEntity.status(403).body("관리자 권한이 필요합니다.");
         }
 //        // roleType이 null이거나 "admin"이 아닌 경우 401 Unauthorized 반환
 //        if (roleType == null || !roleType.equalsIgnoreCase("admin")) {

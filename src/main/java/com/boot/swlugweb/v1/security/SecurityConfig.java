@@ -22,39 +22,47 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .formLogin(form -> form.disable())
-
-                // 세션 관리 설정 통합
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(false)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        // 블로그 관련 권한
-                        // 공지사항 관련 권한
-                        .requestMatchers("/api/blog/**").permitAll()
-                        .requestMatchers("/api/blog/upload-image").permitAll()
-                        .requestMatchers("/api/blog/images/**").permitAll()  // 이미지 조회 URL 허용
-                        .requestMatchers("/api/notice/save").permitAll()
-                        .requestMatchers("/api/notice/delete").permitAll()
-                        .requestMatchers("/api/notice/details").permitAll()
-                        .requestMatchers("/api/notice/adjacent").permitAll()
-                        // 로그인/회원가입 관련 권한
-                        .requestMatchers("/api/login/**").permitAll()
-                        .requestMatchers("/api/login/check").permitAll()
-                        .requestMatchers("/api/login/logout").permitAll()
-                        .requestMatchers("/api/signup/**").permitAll()
-                        .requestMatchers("/api/mypage").permitAll()
-                        // 비밀번호 관련 권한
-                        .requestMatchers("/api/password/request-reset").permitAll()
-                        .requestMatchers("/api/password/reset").permitAll()
-                        .requestMatchers("/api/password/verify").permitAll()
-                        .requestMatchers("/api/password/verify-auth").permitAll()
-                        .requestMatchers("/api/api/email/**").permitAll()
-                        .requestMatchers("/error").permitAll()
+                        // 정적 리소스
+                        .requestMatchers("/static/**", "/img/**", "/apply_swlug.png").permitAll()
 
-                        //정적이미지 관련 권한 - 임시
-                        .requestMatchers("/api/blog/**", "/api/blog/images/**", "/apply_swlug.png").permitAll()
+                        // 공지사항 API - 조회 관련
+                        .requestMatchers(
+                                "/api/notice",
+                                "/api/notice/detail",
+                                "/api/notice/adjacent"
+                        ).permitAll()
+
+                        // 공지사항 API - 관리자 전용
+                        .requestMatchers(
+                                "/api/notice/save",
+                                "/api/notice/update",
+                                "/api/notice/delete",
+                                "/api/notice/image/upload"
+                        ).hasAuthority("0")
+
+                        // 블로그 API
+                        .requestMatchers("/api/blog/**").permitAll()
+
+                        // 인증 관련 API
+                        .requestMatchers(
+                                "/api/login/**",
+                                "/api/signup/**",
+                                "/api/password/**"
+                        ).permitAll()
+
+                        // mypage API
+                        .requestMatchers("/api/mypage/**").permitAll()
+
+                        // 그 외 API
+                        .requestMatchers("/api/**").permitAll()
+
+                        .anyRequest().authenticated()
                 );
         return http.build();
     }
