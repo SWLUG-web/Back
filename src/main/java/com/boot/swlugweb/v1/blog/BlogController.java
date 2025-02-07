@@ -49,6 +49,7 @@ public class BlogController {
         return ResponseEntity.ok(blog);
     }
 
+    // BlogController.java
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> saveBlog(
             @RequestPart(name = "blogCreateDto") BlogCreateDto blogCreateDto,
@@ -61,7 +62,8 @@ public class BlogController {
         }
 
         try {
-            if (imageFiles != null && !imageFiles.isEmpty()) {
+            // HTML 컨텐츠에서 이미지 처리를 위한 코드 추가
+            if (blogCreateDto.getBoardContent() != null) {
                 blogCreateDto.setImageFiles(imageFiles);
             }
             blogService.createBlog(blogCreateDto, userId);

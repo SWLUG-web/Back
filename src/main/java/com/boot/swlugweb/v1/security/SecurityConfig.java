@@ -22,6 +22,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
                 .formLogin(form -> form.disable())
+
                 // 세션 관리 설정 통합
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -52,6 +53,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/api/email/**").permitAll()
                         .requestMatchers("/error").permitAll()
 
+                        //정적이미지 관련 권한 - 임시
+                        .requestMatchers("/api/blog/**", "/api/blog/images/**", "/apply_swlug.png").permitAll()
                 );
         return http.build();
     }

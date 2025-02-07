@@ -16,6 +16,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -110,7 +112,6 @@ public class BlogService {
         blogDomain.setBoardContents(blogCreateDto.getBoardContent());
         blogDomain.setCreateAt(LocalDateTime.now());
         blogDomain.setTag(blogCreateDto.getTag());
-        blogDomain.setThumbnailImage(blogCreateDto.getThumbnailImage());
         blogDomain.setIsPin(false);
         blogDomain.setIsSecure(0);
         blogDomain.setIsDelete(0);
@@ -128,8 +129,19 @@ public class BlogService {
             }
         }
 
+        // HTML 컨텐츠에서 이미지 URL 추출
+        Pattern pattern = Pattern.compile("src=\"(/api/blog/images/[^\"]+)\"");
+        Matcher matcher = pattern.matcher(blogCreateDto.getBoardContent());
+        while (matcher.find()) {
+            String imageUrl = matcher.group(1);
+            if (!uploadedImageUrls.contains(imageUrl)) {
+                uploadedImageUrls.add(imageUrl);
+            }
+        }
+
         blogDomain.setImage(uploadedImageUrls);
         return blogRepository.save(blogDomain);
+
     }
 
     public void updateBlog(BlogUpdateRequestDto blogUpdateRequestDto, String userId) throws IOException {
@@ -148,9 +160,6 @@ public class BlogService {
         }
         if (blogUpdateRequestDto.getTag() != null) {
             blog.setTag(blogUpdateRequestDto.getTag());
-        }
-        if (blogUpdateRequestDto.getThumbnailImage() != null) {
-            blog.setThumbnailImage(blogUpdateRequestDto.getThumbnailImage());
         }
 
         List<String> currentImageUrls = blog.getImage() != null ? new ArrayList<>(blog.getImage()) : new ArrayList<>();

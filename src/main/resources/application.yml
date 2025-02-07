@@ -22,6 +22,11 @@ spring:
     mongodb:
       uri: mongodb://${SWLUG_MONGODB_URI}
 
+  web:
+    resources:
+      static-locations: classpath:/static/,file:${file.upload-dir}
+
+
 file:
   upload-dir: ${SWLUG_UPLOAD_DIR:uploads/images}
 
