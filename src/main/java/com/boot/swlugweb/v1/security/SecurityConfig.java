@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 "/api/notice/update",
                                 "/api/notice/delete",
                                 "/api/notice/image/upload"
-                        ).hasAuthority("0")
+                        ).permitAll()
 
                         // 블로그 API
                         .requestMatchers("/api/blog/**").permitAll()
