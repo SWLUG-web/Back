@@ -71,6 +71,17 @@ public class SecurityUserPasswordAuthenticationFilter extends UsernamePasswordAu
 
         // 세션에 사용자 ID 추가
         session.setAttribute("USER", userDetails.getUsername());
+                                            Authentication authResult) throws IOException {
+//         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
+
+//         // 권한 가져오기
+//         String role = userDetails.getAuthorities().stream()
+//                 .findFirst()
+//                 .map(GrantedAuthority::getAuthority)
+//                 .orElse("");
+
+//         HttpSession session = request.getSession();
+//         session.setAttribute("ROLE_TYPE", role);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -84,6 +95,11 @@ public class SecurityUserPasswordAuthenticationFilter extends UsernamePasswordAu
                                 .orElse("")
                     )
             ));
+//                         "success", true,
+//                         "userId", userDetails.getUsername(),
+//                         "roleType", role
+//                 )
+//         ));
     }
 
     @Override

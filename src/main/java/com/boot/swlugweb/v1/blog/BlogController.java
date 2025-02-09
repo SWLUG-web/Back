@@ -1,43 +1,39 @@
 package com.boot.swlugweb.v1.blog;
 
-import com.boot.swlugweb.v1.notice.NoticeUpdateRequestDto;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.gson.Gson;
-import jakarta.servlet.http.HttpServletRequest;
+// import com.boot.swlugweb.v1.notice.NoticeUpdateRequestDto;
+// import com.fasterxml.jackson.databind.ObjectMapper;
+// import com.google.api.client.json.JsonFactory;
+// import com.google.api.client.json.gson.GsonFactory;
+// import com.google.gson.Gson;
+// import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api/blog")
 public class BlogController {
 
-    @Autowired
+    @Value("${file.upload-dir}")
+    private String uploadDir;
+
     private final BlogService blogService;
 
-    private static final String APPLICATION_NAME = "Google Drive API Java Quickstart";
-    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
-    private final GoogleDriveService googleDriveService;
-
-
-    public BlogController(BlogService blogService, GoogleDriveService googleDriveService) {
+    public BlogController(BlogService blogService) {
         this.blogService = blogService;
-        this.googleDriveService = googleDriveService;
     }
 
     @GetMapping
@@ -47,7 +43,7 @@ public class BlogController {
             @RequestParam(defaultValue = "") String searchTerm,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) List<String> tags
-    ){
+    ) {
         BlogPageResponseDto response = blogService.getBlogsWithPaginationg(page, category, searchTerm, size, tags);
         return ResponseEntity.ok(response);
     }
@@ -55,18 +51,16 @@ public class BlogController {
     @PostMapping("/detail")
     public ResponseEntity<BlogDetailResponseDto> getBlogDetail(@RequestBody Map<String, String> request) {
         String id = request.get("id");
-
         BlogDetailResponseDto blog = blogService.getBlogDetail(id);
         return ResponseEntity.ok(blog);
     }
 
-
-// google 블로그 저장
+    // BlogController.java
     @PostMapping(value = "/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> saveBlog(
             @RequestPart(name = "blogCreateDto") BlogCreateDto blogCreateDto,
             @RequestPart(name = "imageFiles", required = false) List<MultipartFile> imageFiles,
-            HttpSession session) throws GeneralSecurityException, IOException {
+            HttpSession session) {
 
         String userId = (String) session.getAttribute("USER");
         if (userId == null) {
@@ -74,12 +68,13 @@ public class BlogController {
         }
 
         try {
-            if (imageFiles != null && !imageFiles.isEmpty()) {
+            // HTML 컨텐츠에서 이미지 처리를 위한 코드 추가
+            if (blogCreateDto.getBoardContent() != null) {
                 blogCreateDto.setImageFiles(imageFiles);
             }
             blogService.createBlog(blogCreateDto, userId);
             return ResponseEntity.status(302)
-                    .header(HttpHeaders.LOCATION,"/api/blog")
+                    .header(HttpHeaders.LOCATION, "/api/blog")
                     .build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,108 +84,86 @@ public class BlogController {
 
 
 
-
-//    기본 블로그 저장
-//    @PostMapping("/save")
-//    public ResponseEntity<?> saveBlog(@RequestBody BlogCreateDto blogCreateDto,
-//                                 HttpSession session) throws GeneralSecurityException , IOException {
-//        String userId = (String) session.getAttribute("USER");
-//        if (userId == null) {
-//            return ResponseEntity.status(401).build();
-//        }
-//
-//        try {
-//            blogService.createBlog(blogCreateDto, userId);
-//
-//            return ResponseEntity.status(302)
-//                    .header(HttpHeaders.LOCATION,"/api/blog")
-//                    .build();
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//
-//    }
-
+// //    기본 블로그 저장
+// //    @PostMapping("/save")
+// //    public ResponseEntity<?> saveBlog(@RequestBody BlogCreateDto blogCreateDto,
+// //                                 HttpSession session) throws GeneralSecurityException , IOException {
+// //        String userId = (String) session.getAttribute("USER");
+// //        if (userId == null) {
+// //            return ResponseEntity.status(401).build();
+// //        }
+// //
+// //        try {
+// //            blogService.createBlog(blogCreateDto, userId);
+// //
+// //            return ResponseEntity.status(302)
+// //                    .header(HttpHeaders.LOCATION,"/api/blog")
+// //                    .build();
+// //        } catch (Exception e) {
+// //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+// //        }
+// //
+// //    }
 
 
-//    // google 블로그 수정 (최종x)
-//    @PostMapping(value="/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<String> updateBlogPost(
-//            @RequestPart(name = "blogUpdateRequestDto") BlogUpdateRequestDto blogUpdateRequestDto,
-//            @RequestPart(name = "imageFiles", required = false) List<MultipartFile> imageFiles,
-//            HttpSession session
-//    ) throws GeneralSecurityException, IOException {
-//        String userId = (String) session.getAttribute("USER");
-//        if (userId == null) {
-//            return ResponseEntity.status(401).build();
-//        }
-//
-//        try {
-//            if(imageFiles != null && !imageFiles.isEmpty()) {
-//                blogUpdateRequestDto.setImageFiles(imageFiles);
-//            }
-//            blogService.updateBlog(blogUpdateRequestDto, userId);
-//
-//            return ResponseEntity.status(302)
-//                    .header(HttpHeaders.LOCATION,"/api/blog")
-//                    .build();
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
 
-    // google 블로그 수정 (최종)
-    @PostMapping(value="/update", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+// //    // google 블로그 수정 (최종x)
+// //    @PostMapping(value="/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+// //    public ResponseEntity<String> updateBlogPost(
+// //            @RequestPart(name = "blogUpdateRequestDto") BlogUpdateRequestDto blogUpdateRequestDto,
+// //            @RequestPart(name = "imageFiles", required = false) List<MultipartFile> imageFiles,
+// //            HttpSession session
+// //    ) throws GeneralSecurityException, IOException {
+// //        String userId = (String) session.getAttribute("USER");
+// //        if (userId == null) {
+// //            return ResponseEntity.status(401).build();
+// //        }
+// //
+// //        try {
+// //            if(imageFiles != null && !imageFiles.isEmpty()) {
+// //                blogUpdateRequestDto.setImageFiles(imageFiles);
+// //            }
+// //            blogService.updateBlog(blogUpdateRequestDto, userId);
+// //
+// //            return ResponseEntity.status(302)
+// //                    .header(HttpHeaders.LOCATION,"/api/blog")
+// //                    .build();
+// //        } catch (Exception e) {
+// //            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+// //        }
+// //    }
+
+//     // google 블로그 수정 (최종)
+//     @PostMapping(value="/update", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PostMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<String> updateBlogPost(
             @RequestPart(name = "blogUpdateRequestDto" ,required = false) String blogUpdateRequestDtoString,
             @RequestPart(name = "imageFiles", required = false) List<MultipartFile> imageFiles,
             HttpSession session
-    ) throws GeneralSecurityException, IOException {
+    ) {
         String userId = (String) session.getAttribute("USER");
         if (userId == null) {
             return ResponseEntity.status(401).build();
         }
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            BlogUpdateRequestDto blogUpdateRequestDto = objectMapper.readValue(blogUpdateRequestDtoString, BlogUpdateRequestDto.class);
+//             ObjectMapper objectMapper = new ObjectMapper();
+//             BlogUpdateRequestDto blogUpdateRequestDto = objectMapper.readValue(blogUpdateRequestDtoString, BlogUpdateRequestDto.class);
 
-            if(imageFiles != null && !imageFiles.isEmpty()) {
+//             if(imageFiles != null && !imageFiles.isEmpty()) {
+            if (imageFiles != null && !imageFiles.isEmpty()) {
                 blogUpdateRequestDto.setImageFiles(imageFiles);
             }
             blogService.updateBlog(blogUpdateRequestDto, userId);
 
             return ResponseEntity.status(302)
-                    .header(HttpHeaders.LOCATION,"/api/blog")
+                    .header(HttpHeaders.LOCATION, "/api/blog")
                     .build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    //기본 블로그 수정
-//    @PostMapping("/update")
-//    public ResponseEntity<String> updateBlogPost(
-//            @RequestBody BlogUpdateRequestDto blogUpdateRequestDto,
-//            HttpSession session
-//    ) throws GeneralSecurityException, IOException {
-//        String userId = (String) session.getAttribute("USER");
-//        if (userId == null) {
-//            return ResponseEntity.status(401).build();
-//        }
-//
-//        try {
-//            blogService.updateBlog(blogUpdateRequestDto, userId);
-//
-//            return ResponseEntity.status(302)
-//                    .header(HttpHeaders.LOCATION,"/api/blog")
-//                    .build();
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//    }
-
-//    기본 블로그 삭제(google도 적용)
     @PostMapping("/delete")
     public ResponseEntity<String> deleteBlog(
             @RequestBody BlogDeleteRequestDto blogDeleteRequestDto,
@@ -203,9 +176,8 @@ public class BlogController {
 
         try {
             blogService.deleteBlog(blogDeleteRequestDto, userId);
-//            return ResponseEntity.ok().body("{\"redirect\": \"/blog\"}");
             return ResponseEntity.status(302)
-                    .header(HttpHeaders.LOCATION,"/api/blog")
+                    .header(HttpHeaders.LOCATION, "/api/blog")
                     .build();
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -218,20 +190,6 @@ public class BlogController {
         return ResponseEntity.ok(tags);
     }
 
-    // 태그 검색
-//    @GetMapping("/tagSearch")
-//    public ResponseEntity<List<BlogDomain>> searchBlogsByTag(
-//            @RequestParam String tag,
-//            @RequestParam(defaultValue = "0") int page
-//    ) {
-//        try {
-//            List<BlogDomain> blogs = blogService.searchBlogsByTag(tag, page);
-//            return ResponseEntity.ok(blogs);
-//        } catch (IllegalArgumentException e) {
-//            return ResponseEntity.badRequest().body(null); // 잘못된 입력 처리
-//        }
-//    }
-
     @PostMapping("/adjacent")
     public ResponseEntity<Map<String, BlogSummaryDto>> searchBlogsByAdjacent(@RequestBody Map<String, String> request) {
         String id = request.get("id");
@@ -239,22 +197,51 @@ public class BlogController {
         return ResponseEntity.ok(adjacentBlogs);
     }
 
-    //사진 업로드
-    @PostMapping("/image/upload")
+    // 새로운 이미지 업로드 엔드포인트
+    @PostMapping("/upload-image")
     @ResponseBody
-    public String uploadImageToDrive(MultipartHttpServletRequest request, HttpServletRequest req) throws Exception {
-        Map<String, Object> map = new HashMap<>();
-
-        // 이미지 파일 받아오기
-        MultipartFile uploadFile = request.getFile("upload");
-
-        // GoogleDriveService를 통해 파일을 구글 드라이브에 업로드
-        String fileUrl = googleDriveService.uploadFileToDrive(uploadFile);
-
-        // 반환할 URL을 map에 넣어줌
-        map.put("url", fileUrl);
-
-        return new Gson().toJson(map);
+    public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam("upload") MultipartFile file) {
+        try {
+            String imageUrl = blogService.saveImage(file);
+            Map<String, Object> response = new HashMap<>();
+            response.put("uploaded", true);
+            response.put("url", imageUrl);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("uploaded", false);
+            response.put("error", Map.of("message", "Image upload failed: " + e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
+    // 이미지 조회 엔드포인트
+    @GetMapping("/images/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serveImage(@PathVariable String filename) {
+        try {
+            Path imagePath = Paths.get(uploadDir).resolve(filename);
+            Resource resource = new UrlResource(imagePath.toUri());
+
+            if (resource.exists() && resource.isReadable()) {
+                String contentType = Files.probeContentType(imagePath);
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+
+                // 캐시 설정 추가
+                CacheControl cacheControl = CacheControl.maxAge(365, TimeUnit.DAYS);
+
+                return ResponseEntity.ok()
+                        .cacheControl(cacheControl)
+                        .contentType(MediaType.parseMediaType(contentType))
+                        .header("Content-Disposition", "inline; filename=\"" + filename + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

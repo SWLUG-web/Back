@@ -44,6 +44,9 @@ public class BlogDomain {
     @Field("image")
     private List<String> image;
 
+    @Field("thumbnail_image")
+    private String thumbnailImage;
+
     @Field("is_pin")
     private Boolean isPin = false;
 
@@ -52,5 +55,7 @@ public class BlogDomain {
 
     @Field("is_delete")
     private Integer isDelete = 0;
+
+
 
 }
