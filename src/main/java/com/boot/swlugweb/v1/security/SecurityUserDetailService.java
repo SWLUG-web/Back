@@ -29,7 +29,7 @@ public class SecurityUserDetailService implements UserDetailsService {
 
         logger.debug("Debugging login request for: {}", username);
 
-
+        //unsername을 사용해서 사용자의 ruletype을 찾음
         SecurityUserInfoDomain userInfoDomain = securityUserInfoRepository.findBySecurityUsers_userId(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with user_id: " + username));
 
@@ -40,7 +40,7 @@ public class SecurityUserDetailService implements UserDetailsService {
 
         //권한 생성
         String role = mapRoleTypeToString(userInfoDomain.getSecurityUserRuleType().getRole_type());
-        System.out.println("Role: " + role);
+        //System.out.println("Role: " + role);
 
         logger.debug("User {} has role: {}", username, role);
 
@@ -53,9 +53,9 @@ public class SecurityUserDetailService implements UserDetailsService {
 
     private String mapRoleTypeToString(int roleType) {
         switch (roleType) {
-            case 0: return "ADMIN";
-            case 1: return "USER";
-            case 2: return "GUEST";
+            case 0: return "ROLE_ADMIN"; //hasAnyRole이 ROLE을 앞에 붙여서 비교 -> 앞에 ROLE 붙여줘야 함 ;;;
+            case 1: return "ROLE_USER";
+            case 2: return "ROLE_GUEST";
             default: throw new IllegalArgumentException("Invalid rule type: " + roleType);
         }
     }
