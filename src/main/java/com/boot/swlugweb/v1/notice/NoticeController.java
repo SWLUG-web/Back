@@ -1,5 +1,9 @@
 package com.boot.swlugweb.v1.notice;
 
+// import com.boot.swlugweb.v1.blog.GoogleDriveService;
+// import com.fasterxml.jackson.databind.ObjectMapper;
+// import com.google.gson.Gson;
+// import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -59,6 +63,9 @@ public class NoticeController {
     }
     
 //    공지 저장
+//    @PostMapping("/save")
+//    public ResponseEntity<?> saveNotice(@RequestBody NoticeCreateDto noticeCreateDto,
+//            
     @PostMapping("/save")
     public ResponseEntity<?> saveNotice(@RequestBody NoticeCreateDto noticeCreateDto,
                                         HttpSession session) {
@@ -100,40 +107,60 @@ public class NoticeController {
 ////            return ResponseEntity.status(401).body("Unauthorized: Admin access required.");
 ////        }
 //
-//        try{
-//            if(imageFiles != null && !imageFiles.isEmpty()){
-//                noticeCreateDto.setImageFiles(imageFiles);
-//            }
-//            noticeService.createNotice(noticeCreateDto, userId);
-////            return ResponseEntity.ok().body("{\"redirect\": \"/api/notice\"}");
-//            return ResponseEntity.status(302)
-//                    .header(HttpHeaders.LOCATION,"/api/notice")
-//                    .build(); //blog 등록 리다이렉트
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//        }
-//
-//
-//
+//        noticeService.createNotice(noticeCreateDto, userId);
+//        return ResponseEntity.ok().body("{\"redirect\": \"/api/notice\"}");
 //    }
-    
 
-    @PostMapping("/update")
-    public ResponseEntity<String> updateNoticePost(
-            @RequestBody NoticeUpdateRequestDto noticeUpdateRequestDto,
-            HttpSession session
-    ) {
+    //google 공지 저장
+    @PostMapping(value="/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> saveNotice(@RequestPart(name="noticeCreateDto") NoticeCreateDto noticeCreateDto,
+                                        @RequestPart(name = "imageFiles", required = false) List<MultipartFile> imageFiles,
+                                        HttpSession session) throws GeneralSecurityException, IOException  {
         String userId = (String) session.getAttribute("USER");
+//        String roleType = (String) session.getAttribute("ROLE");
+//        System.out.println(roleType);
         if (userId == null) {
             return ResponseEntity.status(401).build();
         }
+//        // roleType이 null이거나 "admin"이 아닌 경우 401 Unauthorized 반환
+//        if (roleType == null || !roleType.equalsIgnoreCase("admin")) {
+//            return ResponseEntity.status(401).body("Unauthorized: Admin access required.");
+//        }
 
-        noticeService.updateNotice(noticeUpdateRequestDto, userId);
-        return ResponseEntity.ok().body("{\"redirect\": \"/api/notice\"}");
+        try{
+            if(imageFiles != null && !imageFiles.isEmpty()){
+                noticeCreateDto.setImageFiles(imageFiles);
+            }
+            noticeService.createNotice(noticeCreateDto, userId);
+//            return ResponseEntity.ok().body("{\"redirect\": \"/api/notice\"}");
+            return ResponseEntity.status(302)
+                    .header(HttpHeaders.LOCATION,"/api/notice")
+                    .build(); //blog 등록 리다이렉트
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+
+
     }
+    
 
-//    //google 수정
+//    @PostMapping("/update")
+//    public ResponseEntity<String> updateNoticePost(
+//            @RequestBody NoticeUpdateRequestDto noticeUpdateRequestDto,
+//            HttpSession session
+//    ) {
+//        String userId = (String) session.getAttribute("USER");
+//        if (userId == null) {
+//            return ResponseEntity.status(401).build();
+//        }
+//
+//        noticeService.updateNotice(noticeUpdateRequestDto, userId);
+//        return ResponseEntity.ok().body("{\"redirect\": \"/api/notice\"}");
+//    }
+
+//    //google 수정 (최종x)
 //    @PostMapping(value="/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    public ResponseEntity<String> updateNoticePost(
 //            @RequestPart(name="noticeUpdateRequestDto") NoticeUpdateRequestDto noticeUpdateRequestDto,
@@ -158,7 +185,42 @@ public class NoticeController {
 //        }
 //
 //    }
-    
+
+    //google 수정 (최종)
+    @PostMapping(value = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> updateNoticePost(
+            @RequestPart(value = "noticeUpdateRequestDto", required = false) String noticeUpdateRequestDtoString,
+            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> imageFiles,
+            HttpSession session) throws GeneralSecurityException, IOException {
+
+        String userId = (String) session.getAttribute("USER");
+        if (userId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            NoticeUpdateRequestDto noticeUpdateRequestDto = objectMapper.readValue(noticeUpdateRequestDtoString, NoticeUpdateRequestDto.class);
+
+            if (imageFiles != null && !imageFiles.isEmpty()) {
+                noticeUpdateRequestDto.setImageFiles(imageFiles);
+            }
+
+            noticeService.updateNotice(noticeUpdateRequestDto, userId);
+
+            return ResponseEntity.status(302)
+                    .header(HttpHeaders.LOCATION, "/api/notice")
+                    .build(); // Blog 수정 리다이렉트
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     @PostMapping("/delete")
     public ResponseEntity<String> deleteNoticePost(
