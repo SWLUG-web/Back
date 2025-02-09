@@ -13,8 +13,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -53,27 +56,34 @@ public class SecurityUserPasswordAuthenticationFilter extends UsernamePasswordAu
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
-                                            Authentication authResult) throws IOException {
+                                            Authentication authResult ) throws IOException, ServletException {
+
+        //security context 설정
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authResult);
+        SecurityContextHolder.setContext(context);
+
+        //세션에 SecurityContext 저장
+        HttpSession session = request.getSession(true);
+        session.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+
         UserDetails userDetails = (UserDetails) authResult.getPrincipal();
 
-        // 권한 가져오기
-        String role = userDetails.getAuthorities().stream()
-                .findFirst()
-                .map(GrantedAuthority::getAuthority)
-                .orElse("");
-
-        HttpSession session = request.getSession();
-        session.setAttribute("ROLE_TYPE", role);
+        // 세션에 사용자 ID 추가
+        session.setAttribute("USER", userDetails.getUsername());
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(
                 Map.of(
-                        "success", true,
-                        "userId", userDetails.getUsername(),
-                        "roleType", role
-                )
-        ));
+                     "success", true,
+                        "userId", userDetails.getUsername(), //사용자 역할 찾으려면 name 가지고 와야 함 -> 그래서 user_id는 저장이 안되고 있던 것 ...
+                        "role", userDetails.getAuthorities().stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .findFirst()
+                                .orElse("")
+                    )
+            ));
     }
 
     @Override
