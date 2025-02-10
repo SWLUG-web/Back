@@ -3,15 +3,12 @@ package com.boot.swlugweb.v1.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -21,16 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SecurityConfig {
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws  Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-
-        SecurityUserPasswordAuthenticationFilter customAuthFilter = new SecurityUserPasswordAuthenticationFilter(authenticationManager);
-        customAuthFilter.setFilterProcessesUrl("/api/login");
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
@@ -42,8 +30,8 @@ public class SecurityConfig {
                         .maxSessionsPreventsLogin(false)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        //모든 API에 대한 권한 설정을 진행해야 함
                         // 블로그 관련 권한
+
                         .requestMatchers("/api/blog/save", "/api/blog/update", "/api/blog/delete", "/api/blog/upload-image").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/blog/**").permitAll()
                         .requestMatchers("/api/blog/detail", "/api/blog/tags", "/api/blog/adjacent").permitAll()
@@ -58,26 +46,18 @@ public class SecurityConfig {
                         .requestMatchers("/api/login/check").permitAll()
                         .requestMatchers("/api/login/logout").permitAll()
                         .requestMatchers("/api/signup/**").permitAll()
-
-                        //mypage는 인증된 사용자만 접근 가능
-                        .requestMatchers("/api/mypage").authenticated()
-
+                        .requestMatchers("/api/mypage").permitAll()
                         // 비밀번호 관련 권한
                         .requestMatchers("/api/password/request-reset").permitAll()
                         .requestMatchers("/api/password/reset").permitAll()
                         .requestMatchers("/api/password/verify").permitAll()
                         .requestMatchers("/api/password/verify-auth").permitAll()
-
-                        //이메일 인증 번호 전송(회원가입시)
-                        .requestMatchers("/api/email/**").permitAll()
-
-                        //faq, intro, main, 개보처리방안, apply 권한
-                        .requestMatchers("/api/faq","/api/main", "/api/intro", "/api/apply", "/api/privacy" ).permitAll()
-
+                        .requestMatchers("/api/api/email/**").permitAll()
                         .requestMatchers("/error").permitAll()
-
-                )
-                .addFilterAt(customAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                        // Admin 페이지 관련 권한
+                        .requestMatchers("/api/admin/**").permitAll()
+                        
+                );
         return http.build();
     }
 
