@@ -2,8 +2,6 @@ package com.boot.swlugweb.v1.blog;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,14 +14,21 @@ public class BlogDto {
     private LocalDateTime createAt;
     private String userId;
     private String nickname;
-    private String categoryName; // 추가된 필드
-
+    private String categoryName;
     private List<String> tag;
-    private List<String> image;//추가
-//    private List<String> imageUrl; // image로 변경
-
+    private List<String> image;
     private Boolean isPin = false;
     private Integer isSecure = 0;
     private Integer isDelete = 0;
+    private String thumbnailImage; // 필드는 유지
 
+    public String getThumbnailUrl() {
+        if (image != null && !image.isEmpty()) {
+            String firstImage = image.get(0);
+            return firstImage.startsWith("/api/blog/images/")
+                    ? firstImage
+                    : "/api/blog/images/" + firstImage;
+        }
+        return "/img/apply_swlug.png";
+    }
 }
