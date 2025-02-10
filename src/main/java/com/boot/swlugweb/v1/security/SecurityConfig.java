@@ -31,12 +31,16 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         // 블로그 관련 권한
+
+                        .requestMatchers("/api/blog/save", "/api/blog/update", "/api/blog/delete", "/api/blog/upload-image").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.GET, "/api/blog/**").permitAll()
+                        .requestMatchers("/api/blog/detail", "/api/blog/tags", "/api/blog/adjacent").permitAll()
+
                         // 공지사항 관련 권한
-                        .requestMatchers("/api/blog/**").permitAll()
-                        .requestMatchers("/api/notice/save").hasRole("ADMIN")
-                        .requestMatchers("/api/notice/delete").hasRole("ADMIN")
-                        .requestMatchers("/api/notice/details").hasAnyRole("ADMIN", "USER", "GUEST")
-                        .requestMatchers("/api/notice/adjacent").hasAnyRole("ADMIN", "USER", "GUEST")
+                        .requestMatchers("/api/notice/save", "/api/notice/update", "/api/notice/delete","/api/notice/upload-image").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/notice/**").permitAll()
+                        .requestMatchers("/api/notice/detail", "/api/notice/adjacent").permitAll()
+
                         // 로그인/회원가입 관련 권한
                         .requestMatchers("/api/login/**").permitAll()
                         .requestMatchers("/api/login/check").permitAll()

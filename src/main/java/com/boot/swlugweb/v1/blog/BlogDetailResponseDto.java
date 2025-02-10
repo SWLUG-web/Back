@@ -16,8 +16,7 @@ public class BlogDetailResponseDto {
     private LocalDateTime createAt;
     private String userId;
     private String nickname;
-
     private List<String> tag;
-    private List<String> image;//추가
-//    private List<String> imageUrl; // image로 변경
+    private List<String> image;
+    private String thumbnailImage;
 }
