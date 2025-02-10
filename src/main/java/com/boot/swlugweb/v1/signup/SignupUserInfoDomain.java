@@ -26,11 +26,11 @@ public class SignupUserInfoDomain {
     private String phone;
 
 
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "users_num")
     private SignupUsersDomain signupUsers;
 
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "type_num")
     private SignupUserRuleTypeDomain signupUserRuleType;
 

@@ -50,6 +50,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/password/verify-auth").permitAll()
                         .requestMatchers("/api/api/email/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        // Admin 페이지 관련 권한
+                        .requestMatchers("/api/admin/**").permitAll()
                         
                 );
         return http.build();

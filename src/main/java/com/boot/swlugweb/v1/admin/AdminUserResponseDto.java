@@ -6,17 +6,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AdminUserResponseDto {
-    private Integer typeNum;
+    private Integer userInfoNum;
     private String userId;
     private String nickname;
     private Integer roleType;
-    private Long version;
 
-    public AdminUserResponseDto(Integer typeNum, String userId, String nickname, Integer roleType, Long version) {
-        this.typeNum = typeNum;
+    public AdminUserResponseDto(Integer userInfoNum, String userId, String nickname, Integer roleType) {
+        this.userInfoNum = userInfoNum;
         this.userId = userId;
         this.nickname = nickname;
         this.roleType = roleType;
-        this.version = version;
     }
 }
